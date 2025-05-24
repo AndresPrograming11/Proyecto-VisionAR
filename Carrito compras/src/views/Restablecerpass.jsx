@@ -1,19 +1,31 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "../style/RestablecerPass.css";
 
-function Registro() {
-  
+function RestablecerPass() {
   const [correo, setCorreo] = useState("");
+  const [mensaje, setMensaje] = useState("");
 
-  const navigate = useNavigate();
+  const handleSendToken = async () => {
+    try {
+      const response = await fetch('http://localhost/backend/send_token.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: correo })
+    });
 
-  const handleRegister = () => {
-    
-    console.log("Datos del usuario:",  correo  );
+      const data = await response.json();
 
-   
-    navigate("/login");
+      if (data.message === 'Correo enviado') {
+        setMensaje("Token enviado al correo electrónico");
+      } else {
+        setMensaje(data.message || "Error al enviar el correo");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setMensaje("Error de conexión con el servidor");
+    }
   };
 
   return (
@@ -27,15 +39,15 @@ function Registro() {
       <div className="formulario">
         <div className="mensaje">
           <h1>Restablecer contraseña</h1>
-          <h2>ingrese el correo que proporciono al</h2>
-          <h2>momento del registro</h2>
+          <h2>Ingrese el correo que proporcionó al momento del registro</h2>
         </div>        
         <label className="label">Correo</label>
         <input type="email" placeholder="Ingresa tu correo" onChange={(e) => setCorreo(e.target.value)} />  
-        <button onClick={handleRegister}>Enviar correo</button>        
+        <button onClick={handleSendToken}>Enviar correo</button>
+        {mensaje && <p>{mensaje}</p>}
       </div>
     </div>
   );
 }
 
-export default Registro;
+export default RestablecerPass;

@@ -9,7 +9,8 @@ import NavbarTop from "../components/NavbarTop";
 import Login from "../views/Login";
 import AdminPanel from "../views/AdminPanel";
 import Registro from "../views/Registro";
-import RestablecerPass from "../views/Restablecerpass";
+import RestablecerPass from "../views/Restablecerpass"; // Asegúrate de que el nombre del archivo sea correcto
+import ResetPassword from "../views/ResetPassword"; // Nuevo componente para cambiar la contraseña
 import AdminUsuarios from "../views/AdminUsuarios";
 import AdminArticulos from "../views/AdminArticulos";
 
@@ -34,6 +35,7 @@ function AppRouter() {
         <Route path="/login" element={<Login autentificar={autentificar} setRole={setRole} />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/restablecerpass" element={<RestablecerPass />} />
+        <Route path="/reset-password" element={<ResetPassword />} /> {/* Nueva ruta para cambiar la contraseña */}
 
         {/* Usuario */}
         {isAuth && role === "user" && (
