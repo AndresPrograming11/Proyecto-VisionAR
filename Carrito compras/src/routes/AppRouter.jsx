@@ -12,7 +12,7 @@ import Registro from "../views/Registro";
 import RestablecerPass from "../views/Restablecerpass";
 import AdminUsuarios from "../views/AdminUsuarios";
 import AdminArticulos from "../views/AdminArticulos";
-
+import Ordenes from "../views/Ordenes";
 import Success from "../views/Sucess";
 import Cancel from "../views/Cancel";
 import CambiarClave from "../views/CambiarClave";
@@ -48,7 +48,7 @@ function AppRouter() {
         <Route path="/cambiarclave" element={<CambiarClave />} />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
-        
+        <Route path="/ordenes" element={<Ordenes />} />
 
         {/* Usuario autenticado */}
         {isAuth && role === "user" && (
