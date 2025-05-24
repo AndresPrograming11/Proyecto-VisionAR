@@ -1,0 +1,53 @@
+.pantalones-container h1 {
+  padding-top: 60px;
+}
+
+.pantalones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Ajustado para que haya más elementos por fila */
+  gap: 20px;
+  padding: 20px 0;
+  width: calc(100% - 200px); /* Ajuste para el tamaño total de la pantalla */
+  margin-left: 150px; /* Para no sobreponerse con el navbar lateral */
+}
+
+.pantalon-card {
+  background-color: #f4f4f4;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.pantalones-img {
+  width: 100px; /* Ajustamos el tamaño de la imagen */
+  height: 100px; /* Ajustamos el tamaño de la imagen */
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.pantalon-card h3 {
+  font-size: 18px; /* Ajuste para que sea más pequeño */
+  margin: 10px 0;
+}
+
+.pantalon-card p {
+  font-size: 14px; /* Ajuste para que sea más pequeño */
+  color: #555;
+}
+
+/* Media Queries para dispositivos móviles */
+@media (max-width: 768px) {
+  .pantalones-grid {
+    grid-template-columns: repeat(2, 1fr); /* Tres elementos por fila en pantallas medianas */
+    width: calc(100% - 200px);
+  }
+}
+
+@media (max-width: 480px) {
+  .pantalones-grid {
+    grid-template-columns: repeat(1, 1fr); /* Dos elementos por fila en pantallas pequeñas */
+    width: calc(100% - 200px);    
+  }
+}
+

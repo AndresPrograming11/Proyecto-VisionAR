@@ -1,0 +1,13 @@
+.compra-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    padding-top: 100px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: rgb(231, 3, 3);
+  }
+  
