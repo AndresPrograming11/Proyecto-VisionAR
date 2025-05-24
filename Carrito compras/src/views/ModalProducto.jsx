@@ -1,4 +1,4 @@
-// ModalProducto.js
+// src/components/ModalProducto.js
 import React, { useState, useEffect } from "react";
 import "../style/ModalProducto.css";
 import { agregarAlCarrito } from "../services/carritoItem";
@@ -15,26 +15,26 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
     }
   }, [cantidad, producto]);
 
-  const handleIncrementar = () => {
+  const Incrementar = () => {
     setCantidad(cantidad + 1);
   };
 
-  const handleDecrementar = () => {
+  const Decrementar = () => {
     if (cantidad > 1) {
       setCantidad(cantidad - 1);
     }
   };
 
-  const handleSeleccionarTalla = (talla) => {
+  const SeleccionarTalla = (talla) => {
     setTallaSeleccionada(talla);
   };
 
-  const handleAgregarAlCarrito = () => {
+  const AgregarAlCarrito = () => {
     if (!tallaSeleccionada) {
       alert("Por favor, selecciona una talla.");
       return;
     }
-  
+
     const nuevoItem = {
       id: producto.id,
       ...producto,
@@ -42,11 +42,15 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
       talla: tallaSeleccionada,
       precioTotal: parseFloat(producto.precio) * cantidad,
     };
-  
-    setCarritoItems((prevItems) => agregarAlCarrito(prevItems, nuevoItem));
+
+    setCarritoItems((prevItems) => {
+      const nuevos = agregarAlCarrito(prevItems, nuevoItem);
+      console.log("Carrito actualizado:", nuevos);
+      return nuevos;
+    });
     onClose();
   };
-  
+
   return (
     <div className="modal-detalle">
       <div className="modal-contenido">
@@ -71,9 +75,9 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
           <div className="control-seccion">
             <p>Cantidad</p>
             <div className="contador-detalle">
-              <button onClick={handleDecrementar}>-</button>
+              <button onClick={Decrementar}>-</button>
               <span>{cantidad}</span>
-              <button onClick={handleIncrementar}>+</button>
+              <button onClick={Incrementar}>+</button>
             </div>
           </div>
 
@@ -84,7 +88,7 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
                 <button
                   key={talla}
                   className={tallaSeleccionada === talla ? "seleccionada" : ""}
-                  onClick={() => handleSeleccionarTalla(talla)}
+                  onClick={() => SeleccionarTalla(talla)}
                 >
                   {talla}
                 </button>
@@ -100,7 +104,7 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
 
         <div className="botones-detalle">
           <button>Visualizar en realidad aumentada</button>
-          <button onClick={handleAgregarAlCarrito}>Agregar al carrito de compras</button>
+          <button onClick={AgregarAlCarrito}>Agregar al carrito de compras</button>
         </div>
       </div>
     </div>

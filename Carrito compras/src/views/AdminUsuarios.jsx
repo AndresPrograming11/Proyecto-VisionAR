@@ -1,28 +1,81 @@
 import { useState, useEffect } from "react";
 import "../style/AdminUsuarios.css";
-import { obtenerUsuarios } from "../services/gestionar_usuarios";
+import {
+  obtenerUsuarios,
+  eliminarUsuario as eliminarUsuarioAPI,
+  actualizarUsuario as actualizarUsuarioAPI,
+} from "../services/gestionar_usuarios";
 
 function AdminUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [usuarioEditando, setUsuarioEditando] = useState(null);
+
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState("");
+  const [contraseña, setContraseña] = useState("");
 
   useEffect(() => {
     const fetchUsuarios = async () => {
       const data = await obtenerUsuarios();
       setUsuarios(data);
     };
-
     fetchUsuarios();
   }, []);
 
-  const eliminarUsuario = (id) => {
+  const eliminarUsuario = async (id) => {
     const confirmacion = window.confirm("¿Estás seguro de eliminar este usuario?");
-    if (confirmacion) {
-      setUsuarios(usuarios.filter((u) => u.id !== id));
+    if (!confirmacion) return;
+
+    const result = await eliminarUsuarioAPI(id);
+    if (result.success) {
+      setUsuarios((prev) => prev.filter((u) => u.id !== id));
+      alert("Usuario eliminado correctamente");
+    } else {
+      alert("Error al eliminar usuario: " + result.message);
     }
   };
 
   const editarUsuario = (id) => {
-    alert(`Aquí puedes redirigir o abrir un modal para editar al usuario con ID ${id}`);
+    const usuario = usuarios.find((u) => u.id === id);
+    if (usuario) {
+      setUsuarioEditando(usuario);
+      setNombre(usuario.nombre);
+      setCorreo(usuario.correo);
+      setUsername(usuario.username);
+      setRole(usuario.role);
+      setContraseña("");
+      setMostrarModal(true);
+    }
+  };
+
+  const guardarCambios = async () => {
+    const usuarioActualizado = {
+      id: usuarioEditando.id,
+      nombre,
+      correo,
+      username,
+      role,
+      contrasena: contraseña,
+    };
+
+    const result = await actualizarUsuarioAPI(usuarioActualizado);
+
+    if (result.success) {
+      setUsuarios((prev) =>
+        prev.map((u) =>
+          u.id === usuarioEditando.id
+            ? { ...u, nombre, correo, username, role }
+            : u
+        )
+      );
+      alert("Usuario actualizado correctamente");
+      setMostrarModal(false);
+    } else {
+      alert("Error al actualizar usuario: " + result.message);
+    }
   };
 
   return (
@@ -35,7 +88,7 @@ function AdminUsuarios() {
             <th>Correo</th>
             <th>Usuario</th>
             <th>Rol</th>
-            <th>contraseña</th>
+            <th>Contraseña</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -55,6 +108,33 @@ function AdminUsuarios() {
           ))}
         </tbody>
       </table>
+
+      {mostrarModal && (
+        <div className="Modal-overlay">
+          <div className="Modal-content">
+            <button className="Modal-close" onClick={() => setMostrarModal(false)}>×</button>
+            <h2>Editar Usuario</h2>
+            <div className="Modal-grid">
+              <label>Nombre</label>
+              <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+
+              <label>Correo</label>
+              <input type="email" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+
+              <label>Usuario</label>
+              <input value={username} onChange={(e) => setUsername(e.target.value)} />
+
+              <label>Rol</label>
+              <select value={role} onChange={(e) => setRole(e.target.value)}>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+              
+            </div>
+            <button className="btn-guardar" onClick={guardarCambios}>Guardar Cambios</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

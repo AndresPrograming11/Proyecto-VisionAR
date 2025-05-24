@@ -20,6 +20,8 @@ import Cancel from "../views/Cancel";
 function AppRouter() {
   const [isAuth, autentificar] = useState(false);  // Iniciar como 'false' para forzar login
   const [role, setRole] = useState(localStorage.getItem("role") || "user");
+  const [carritoItems, setCarritoItems] = useState([]);
+
 
   const loguearse = () => {
     autentificar(false);
@@ -30,7 +32,7 @@ function AppRouter() {
 
   return (
     <Router>
-      {isAuth && <NavbarTop />}
+      {isAuth && <NavbarTop carritoItems={carritoItems} setCarritoItems={setCarritoItems}/>}
       {isAuth && <Navbar loguearse={loguearse} role={role} />}
 
       <Routes>
@@ -43,10 +45,10 @@ function AppRouter() {
         {/* Usuario */}
         {isAuth && role === "user" && (
           <>
-            <Route path="/" element={<TodosLosProductos />} />
-            <Route path="/camisas" element={<Camisas />} />
-            <Route path="/pantalonesYSudaderas" element={<PantalonesYSudaderas />} />
-            <Route path="/uniformes" element={<Uniformes />} />
+             <Route path="/" element={<TodosLosProductos carritoItems={carritoItems} setCarritoItems={setCarritoItems} />} />
+            <Route path="/camisas" element={<Camisas carritoItems={carritoItems} setCarritoItems={setCarritoItems} />} />
+            <Route path="/pantalonesYSudaderas" element={<PantalonesYSudaderas carritoItems={carritoItems} setCarritoItems={setCarritoItems} />} />
+            <Route path="/uniformes" element={<Uniformes carritoItems={carritoItems} setCarritoItems={setCarritoItems} />} />
             <Route path="/success" element={<Success />} />
             <Route path="/cancel" element={<Cancel />} />
           </>

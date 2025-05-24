@@ -3,6 +3,8 @@ import "../style/NavbarTop.css";
 import { useState, useEffect } from "react";
 import { registrarUsuario } from "../services/registro";
 import { crearArticulo } from "../services/articulos";
+
+
 import {
   agregarAlCarrito,
   aumentarCantidad,
@@ -18,8 +20,7 @@ function NavbarTop() {
   const [tiendaSeleccionada, setTiendaSeleccionada] = useState(false);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [tipoModal, setTipoModal] = useState("usuario");
-  const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");
-
+  const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");  
   const [carritoItems, setCarritoItems] = useState([]);
   const [totalCarrito, setTotalCarrito] = useState(0);
 
@@ -121,6 +122,37 @@ function NavbarTop() {
     }
   };
 
+  useEffect(() => {
+    const total = carritoItems.reduce((sum, item) => sum + item.precioTotal, 0);
+    setTotalCarrito(total);
+  }, [carritoItems]);
+
+  const toggleCarrito = () => {
+    setMostrarCarrito(!mostrarCarrito);
+  };
+
+  const aumentarCantidadCarrito = (itemId) => {
+    const updatedCarrito = aumentarCantidad(carritoItems, itemId);
+    setCarritoItems(updatedCarrito);
+  };
+
+  const disminuirCantidadCarrito = (itemId) => {
+    const updatedCarrito = disminuirCantidad(carritoItems, itemId);
+    setCarritoItems(updatedCarrito);
+  };
+
+  const eliminarItem = (itemId) => {
+    const updatedCarrito = eliminarDelCarrito(carritoItems, itemId);
+    setCarritoItems(updatedCarrito);
+  };
+
+  const realizarPago = () => {
+    if (carritoItems.length === 0) {
+      alert("Tu carrito está vacío.");
+      return;
+    }
+    pagarConStripe(carritoItems);
+  };
   
 
  // Funciones para manejar la lógica del carrito
@@ -143,37 +175,15 @@ function NavbarTop() {
     
     agregarItemAlCarrito(nuevoItem);  // Agregar el artículo al carrito
   };
-const aumentarCantidadCarrito = (itemId) => {
-  const updatedCarrito = aumentarCantidad(carritoItems, itemId);
-  setCarritoItems(updatedCarrito);
-  calcularTotal(updatedCarrito);
-};
 
-const disminuirCantidadCarrito = (itemId) => {
-  const updatedCarrito = disminuirCantidad(carritoItems, itemId);
-  setCarritoItems(updatedCarrito);
-  calcularTotal(updatedCarrito);
-};
 
-const eliminarItem = (itemId) => {
-  const updatedCarrito = eliminarDelCarrito(carritoItems, itemId);
-  setCarritoItems(updatedCarrito);
-  calcularTotal(updatedCarrito);
-};
 
 const calcularTotal = (carrito) => {
   const total = carrito.reduce((sum, item) => sum + item.precioTotal, 0);
   setTotalCarrito(total);
 };
 
-const realizarPago = () => {
-  if (carritoItems.length === 0) {
-    alert("Tu carrito está vacío.");
-    return;
-  }
-  console.log(carritoItems);
-  pagarConStripe(carritoItems);
-};
+console.log(carritoItems)
 
   return (
     <nav className="navbar-top">
@@ -193,40 +203,40 @@ const realizarPago = () => {
                 <div className="titulo-carrito">
                   <button className="cerrar-carrito" onClick={CerrarTienda}>⬅</button>
                   <h2>🛒 Tu carrito</h2>
-                </div>
-                
+                </div>                
                 <div className="carrito-lista">
-                  {carritoItems.length > 0 ? (
-                    carritoItems.map(item => (
-                      <div className="carrito-item" key={item.id}>
-                        <img src={item.imagen} alt={item.nombre} />
-                        <div className="info-carrito">
-                          <h4>{item.nombre}</h4>
-                          <button className="talla-btn">{item.talla}</button>
-                          <div className="contador">
-                            <button onClick={() => aumentarCantidadCarrito(item.id)}>+</button>
-                            <span>{item.cantidad}</span>
-                            <button onClick={() => disminuirCantidadCarrito(item.id)}>-</button>
-                          </div>
-                          <button className="borrar-btn" onClick={() => eliminarItem(item.id)}>🗑</button>
-                        </div>
-                        <div className="precio-carrito">
-                          <span>${item.precioTotal.toFixed(2)}</span>
-                        </div>
+              {carritoItems.length > 0 ? (
+                carritoItems.map(item => (
+                  <div className="carrito-item" key={item.id}>
+                    <img src={item.imagen} alt={item.nombre} />
+                    <div className="info-carrito">
+                      <h4>{item.nombre}</h4>
+                      <div className="contador">
+                        <button onClick={() => aumentarCantidadCarrito(item.id)}>+</button>
+                        <span>{item.cantidad}</span>
+                        
+                        <button onClick={() => disminuirCantidadCarrito(item.id)}>-</button>
                       </div>
-                    ))
-                  ) : (
-                    <p className="carrito-vacio">El carrito está vacío.</p>
-                  )}
-                </div>
-
-                {carritoItems.length > 0 && (
-                  <div className="total-carrito">
-                    <button onClick={realizarPago}>Pagar: ${totalCarrito.toFixed(2)}</button>
+                      <button className="borrar-btn" onClick={() => eliminarItem(item.id)}>🗑</button>
+                    </div>
+                    <div className="precio-carrito">
+                      <span>${item.precioTotal}</span>
+                    </div>
                   </div>
-                )}
-              </div>
+                ))
+              ) : (
+                <p className="carrito-vacio">El carrito está vacío.</p>
+              )}
             </div>
+
+            {carritoItems.length > 0 && (
+                  <div className="total-carrito">
+                    <button onClick={() => realizarPago(carritoItems)}>Pagar: ${totalCarrito}</button>
+                  </div>
+            )}
+          </div>
+        </div>
+
           )}
         </>
       ) : (

@@ -1,20 +1,42 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
-require_once "conexion.php";
 
-$sql = "SELECT id, nombre, correo, username, role FROM usuarios";
-$result = $conn->query($sql);
-
-$usuarios = [];
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $usuarios[] = $row;
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
 }
 
-echo json_encode($usuarios);
+require_once 'UsuarioModel.php';
+require_once 'conexion.php';
 
-$conn->close();
+$model = new UsuarioModel($conn);
+$method = $_SERVER['REQUEST_METHOD'];
+
+switch ($method) {
+    case 'GET':
+        $usuarios = $model->listarUsuarios();
+        echo json_encode($usuarios);
+        break;
+
+    case 'POST':
+        $data = json_decode(file_get_contents('php://input'), true);
+        echo json_encode($model->crearUsuario($data));
+        break;
+
+    case 'PUT':
+        $data = json_decode(file_get_contents("php://input"), true);
+         echo json_encode($model->actualizarUsuario($data));
+         break;
+
+    case 'DELETE':
+        parse_str(file_get_contents("php://input"), $data);
+        echo json_encode($model->eliminarUsuario($data['id']));
+        break;
+
+    default:
+        echo json_encode(["success" => false, "message" => "Método no permitido"]);
+        break;
+}

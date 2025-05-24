@@ -20,7 +20,7 @@ if (!$nombre || !$correo || !$username || !$password) {
 }
 
 // Generar token aleatorio y caducidad (1 hora)
-$reset_token        = bin2hex(random_bytes(16)); 
+$reset_token = bin2hex(random_bytes(16)); 
 $reset_token_expiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
 
 
@@ -28,9 +28,7 @@ $reset_token_expiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
 // Preparar INSERT incluyendo token y expiry
-$sql = "INSERT INTO Usuarios
-          (nombre, correo, username, password, role, reset_token, reset_token_expiry)
-        VALUES (?,    ?,      ?,        ?,        'admin', ?,           ?)";
+$sql = "INSERT INTO Usuarios (nombre, correo, username, password, role, reset_token, reset_token_expiry)  VALUES (?,    ?,      ?,        ?,        'user', ?,           ?)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param(
   "ssssss",
