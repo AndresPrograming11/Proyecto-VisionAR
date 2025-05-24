@@ -13,6 +13,8 @@ import RestablecerPass from "../views/Restablecerpass";
 import AdminUsuarios from "../views/AdminUsuarios";
 import AdminArticulos from "../views/AdminArticulos";
 import CambiarPass from '../views/CambiarPass';
+import Success from "../views/Sucess";
+import Cancel from "../views/Cancel";
 
 
 function AppRouter() {
@@ -45,6 +47,8 @@ function AppRouter() {
             <Route path="/camisas" element={<Camisas />} />
             <Route path="/pantalonesYSudaderas" element={<PantalonesYSudaderas />} />
             <Route path="/uniformes" element={<Uniformes />} />
+            <Route path="/success" element={<Success />} />
+            <Route path="/cancel" element={<Cancel />} />
           </>
         )}
 

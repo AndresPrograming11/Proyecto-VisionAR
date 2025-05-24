@@ -10,6 +10,8 @@ import {
   eliminarDelCarrito,
 } from "../services/carritoItem";
 
+import { pagarConStripe } from "../services/pagoStripe";
+
 function NavbarTop() {
   const location = useLocation();
   const [MenuRedespegable, setMenuRedespegable] = useState(false);
@@ -164,9 +166,14 @@ const calcularTotal = (carrito) => {
   setTotalCarrito(total);
 };
 
-  const realizarPago = () => {
-    alert(`¡Redirigiendo al pago por un total de $${totalCarrito.toFixed(2)}!`);
-  };
+const realizarPago = () => {
+  if (carritoItems.length === 0) {
+    alert("Tu carrito está vacío.");
+    return;
+  }
+  console.log(carritoItems);
+  pagarConStripe(carritoItems);
+};
 
   return (
     <nav className="navbar-top">
@@ -174,14 +181,7 @@ const calcularTotal = (carrito) => {
         <>
           <ul className="nav-links-top">
             <li onClick={toggleMenuRedespegable}>{getTitle()}</li>
-            <button onClick={handleAgregarArticulo}>Agregar Camisa Azul</button>
-            {MenuRedespegable && location.pathname.includes("uniformes") && (
-              <ul className="MenuRedespegable-list">
-                <li><Link to="/medicina">Medicina</Link></li>
-                <li><Link to="/odontologia">Odontología</Link></li>
-                <li><Link to="/fisioterapia">Fisioterapia</Link></li>
-              </ul>
-            )}
+            <button onClick={handleAgregarArticulo}>Agregar Camisa Azul</button>            
             <li><button onClick={AbrirTienda} className={tiendaSeleccionada ? "tienda-seleccionada" : ""}>🛒</button></li>
             <li><Link to="/services">👤</Link></li>
             <li><Link to="/opciones"><button>///</button></Link></li>
