@@ -1,9 +1,9 @@
 import "../style/PantalonesYSudaderas.css";
-
 import React, { useState, useEffect } from "react";
 import "../style/PantalonesYSudaderas.css";
 import ModalProducto from "../views/ModalProducto"; 
 import { obtenerArticulos } from "../services/articulos"; 
+const BASE_URL = "http://localhost/carrito-backend/";
 
 function PantalonesYSudaderas({ setCarritoItems }) { 
   const [pantalonesData, setPantalonesData] = useState([]);
@@ -16,7 +16,7 @@ function PantalonesYSudaderas({ setCarritoItems }) {
         const data = await obtenerArticulos();
         if (data && Array.isArray(data)) {
           // Filtrar solo los pantalones
-          const pantalones = data.filter(item => item.categoria === "pantalon");
+          const pantalones = data.filter(item => item.categoria === "pantalones");
           setPantalonesData(pantalones);
         } else {
           console.error("Datos inválidos:", data);
@@ -44,9 +44,9 @@ function PantalonesYSudaderas({ setCarritoItems }) {
       <div className="pantalones-grid">
         {pantalonesData.map(pantalon => (
           <div className="pantalon-card" key={pantalon.id} onClick={() => abrirModal(pantalon)}>
-            <img src={pantalon.imagen} alt={pantalon.nombre} className="pantalon-img" />
+            <img src={`${BASE_URL}${pantalon.imagen}`} alt={pantalon.nombre} className="pantalon-img" />
             <h3>{pantalon.nombre}</h3>
-            <p>${parseFloat(pantalon.precio).toFixed(2)}</p>
+            <p>${parseInt(pantalon.precio)}</p>
           </div>
         ))}
       </div>

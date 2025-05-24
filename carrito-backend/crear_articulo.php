@@ -14,7 +14,7 @@ $categoria = $_POST['categoria'] ?? '';
 function guardarArchivo($campo, $carpeta) {
     if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] === 0) {
         $nombreArchivo = uniqid() . '_' . basename($_FILES[$campo]["name"]);
-        $rutaDestino = "uploads/" . $nombreArchivo;
+        $rutaDestino = "imagenes/" . $nombreArchivo;
         move_uploaded_file($_FILES[$campo]["tmp_name"], $rutaDestino);
         return $rutaDestino;
     }

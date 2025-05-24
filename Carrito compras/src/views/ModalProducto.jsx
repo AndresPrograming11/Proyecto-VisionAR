@@ -1,6 +1,8 @@
 // ModalProducto.js
 import React, { useState, useEffect } from "react";
 import "../style/ModalProducto.css";
+import { agregarAlCarrito } from "../services/carritoItem";
+const BASE_URL = "http://localhost/carrito-backend/";
 
 const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
   const [cantidad, setCantidad] = useState(1);
@@ -32,18 +34,19 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
       alert("Por favor, selecciona una talla.");
       return;
     }
+  
     const nuevoItem = {
-      id: producto.id, // Asegúrate de que esto sea correcto
+      id: producto.id,
       ...producto,
       cantidad: cantidad,
       talla: tallaSeleccionada,
-      precioTotal: precioTotal,
+      precioTotal: parseFloat(producto.precio) * cantidad,
     };
-    console.log("Agregando al carrito:", nuevoItem); // Verifica el nuevo artículo
-    setCarritoItems(prevItems => [...prevItems, nuevoItem]);
-    onClose(); // Cierra el modal después de agregar
+  
+    setCarritoItems((prevItems) => agregarAlCarrito(prevItems, nuevoItem));
+    onClose();
   };
-
+  
   return (
     <div className="modal-detalle">
       <div className="modal-contenido">
@@ -52,7 +55,7 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
         </button>
 
         <h2>{producto.nombre}</h2>
-        <img src={producto.imagen} alt={producto.nombre} />
+        <img src={`${BASE_URL}${producto.imagen}`} alt={producto.nombre} />
 
         <div className="descripcion-detalle">
           <p>Descripción</p>

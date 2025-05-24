@@ -2,7 +2,13 @@ import { Link, useLocation } from "react-router-dom";
 import "../style/NavbarTop.css";
 import { useState, useEffect } from "react";
 import { registrarUsuario } from "../services/registro";
-import { crearArticulo } from "../services/articulos"; // Asegúrate que esta ruta sea correcta
+import { crearArticulo } from "../services/articulos";
+import {
+  agregarAlCarrito,
+  aumentarCantidad,
+  disminuirCantidad,
+  eliminarDelCarrito,
+} from "../services/carritoItem";
 
 function NavbarTop() {
   const location = useLocation();
@@ -12,20 +18,20 @@ function NavbarTop() {
   const [tipoModal, setTipoModal] = useState("usuario");
   const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");
 
-  // Estado para los items del carrito
   const [carritoItems, setCarritoItems] = useState([]);
   const [totalCarrito, setTotalCarrito] = useState(0);
 
-  // Campos para usuario (sin cambios)
+  // Usuario
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [usuario, setUsuario] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [datosRegistrados, setDatosRegistrados] = useState(null);
 
-  // Campos para artículo (sin cambios)
+  // Artículo
   const [nombreArticulo, setNombreArticulo] = useState("");
-  const [precioArticulo, setPrecioArticulo] = useState(""); // Usar un nombre diferente para evitar confusión
+  const [precioArticulo, setPrecioArticulo] = useState("");
   const [imagen, setImagen] = useState(null);
   const [descripcion, setDescripcion] = useState("");
   const [categoria, setCategoria] = useState("");
@@ -34,13 +40,10 @@ function NavbarTop() {
 
   useEffect(() => {
     const role = localStorage.getItem("role");
-    if (role) {
-      setUserRole(role);
-    }
+    if (role) setUserRole(role);
   }, []);
 
   useEffect(() => {
-    // Recalcular el total cada vez que los items del carrito cambian
     const nuevoTotal = carritoItems.reduce((sum, item) => sum + item.precioTotal, 0);
     setTotalCarrito(nuevoTotal);
   }, [carritoItems]);
@@ -58,6 +61,8 @@ function NavbarTop() {
 
   const abrirModal = (tipo) => {
     setTipoModal(tipo);
+    setMensaje("");
+    setDatosRegistrados(null);
     setModalAbierto(true);
   };
 
@@ -65,11 +70,15 @@ function NavbarTop() {
     const res = await registrarUsuario(nombre, correo, usuario, contraseña);
     setMensaje(res.message);
     if (res.success) {
+      setDatosRegistrados({
+        nombre,
+        correo,
+        usuario
+      });
       setNombre("");
       setCorreo("");
       setUsuario("");
       setContraseña("");
-      setTimeout(() => setModalAbierto(false), 2000);
     }
   };
 
@@ -78,6 +87,7 @@ function NavbarTop() {
       setMensaje("Todos los campos son obligatorios.");
       return;
     }
+
     const formData = new FormData();
     formData.append("nombre", nombreArticulo);
     formData.append("precio", precioArticulo);
@@ -86,9 +96,19 @@ function NavbarTop() {
     formData.append("categoria", categoria);
     if (glb) formData.append("modeloGLB", glb);
     if (usdz) formData.append("modeloUSDZ", usdz);
+
     const res = await crearArticulo(formData);
+    setMensaje(res.message);
     if (res.success) {
-      // Limpiar los campos después de guardar
+      setDatosRegistrados({
+        nombre: nombreArticulo,
+        precio: precioArticulo,
+        descripcion,
+        categoria,
+        imagen: imagen.name,
+        glb: glb?.name || "No adjunto",
+        usdz: usdz?.name || "No adjunto"
+      });
       setNombreArticulo("");
       setPrecioArticulo("");
       setImagen(null);
@@ -96,33 +116,56 @@ function NavbarTop() {
       setCategoria("");
       setGlb(null);
       setUsdz(null);
-      setMensaje("Artículo creado correctamente.");
-      setTimeout(() => setModalAbierto(false), 2000);
-    } else {
-      alert(res.message || "Error al crear artículo");
     }
   };
 
-  const aumentarCantidadCarrito = (itemId) => {
-    setCarritoItems(carritoItems.map(item =>
-      item.id === itemId ? { ...item, cantidad: item.cantidad + 1, precioTotal: (item.cantidad + 1) * item.precio } : item
-    ));
-  };
+  
 
-  const disminuirCantidadCarrito = (itemId) => {
-    setCarritoItems(carritoItems.map(item =>
-      item.id === itemId && item.cantidad > 1 ? { ...item, cantidad: item.cantidad - 1, precioTotal: (item.cantidad - 1) * item.precio } : item
-    ));
+ // Funciones para manejar la lógica del carrito
+ const agregarItemAlCarrito = (nuevoItem) => {
+  const updatedCarrito = agregarAlCarrito(carritoItems, nuevoItem);
+  setCarritoItems(updatedCarrito);
+  calcularTotal(updatedCarrito);
+};
+  // Ejemplo de cómo llamar a la función cuando un artículo se agrega
+  const handleAgregarArticulo = () => {
+    const nuevoItem = {
+      id: 1, // ID de ejemplo
+      nombre: 'Camisa Azul',
+      precio: 20.00,
+      cantidad: 1,
+      talla: 'M',
+      precioTotal: 20.00, // precio * cantidad
+      imagen: 'url_de_imagen',
+    };
+    
+    agregarItemAlCarrito(nuevoItem);  // Agregar el artículo al carrito
   };
+const aumentarCantidadCarrito = (itemId) => {
+  const updatedCarrito = aumentarCantidad(carritoItems, itemId);
+  setCarritoItems(updatedCarrito);
+  calcularTotal(updatedCarrito);
+};
 
-  // Función para eliminar un item del carrito
-  const eliminarItem = (itemId) => {
-    setCarritoItems(carritoItems.filter(item => item.id !== itemId));
-  };
+const disminuirCantidadCarrito = (itemId) => {
+  const updatedCarrito = disminuirCantidad(carritoItems, itemId);
+  setCarritoItems(updatedCarrito);
+  calcularTotal(updatedCarrito);
+};
+
+const eliminarItem = (itemId) => {
+  const updatedCarrito = eliminarDelCarrito(carritoItems, itemId);
+  setCarritoItems(updatedCarrito);
+  calcularTotal(updatedCarrito);
+};
+
+const calcularTotal = (carrito) => {
+  const total = carrito.reduce((sum, item) => sum + item.precioTotal, 0);
+  setTotalCarrito(total);
+};
 
   const realizarPago = () => {
-    alert(`¡Redirigiendo al pago por un total de $${totalCarrito.toFixed(2)}! (Funcionalidad de pago no implementada)`);
-    // Aquí iría la lógica para redirigir a la página de pago
+    alert(`¡Redirigiendo al pago por un total de $${totalCarrito.toFixed(2)}!`);
   };
 
   return (
@@ -131,6 +174,7 @@ function NavbarTop() {
         <>
           <ul className="nav-links-top">
             <li onClick={toggleMenuRedespegable}>{getTitle()}</li>
+            <button onClick={handleAgregarArticulo}>Agregar Camisa Azul</button>
             {MenuRedespegable && location.pathname.includes("uniformes") && (
               <ul className="MenuRedespegable-list">
                 <li><Link to="/medicina">Medicina</Link></li>
@@ -138,9 +182,7 @@ function NavbarTop() {
                 <li><Link to="/fisioterapia">Fisioterapia</Link></li>
               </ul>
             )}
-            <li>
-              <button onClick={AbrirTienda} className={tiendaSeleccionada ? "tienda-seleccionada" : ""}>🛒</button>
-            </li>
+            <li><button onClick={AbrirTienda} className={tiendaSeleccionada ? "tienda-seleccionada" : ""}>🛒</button></li>
             <li><Link to="/services">👤</Link></li>
             <li><Link to="/opciones"><button>///</button></Link></li>
           </ul>
@@ -152,25 +194,32 @@ function NavbarTop() {
                   <button className="cerrar-carrito" onClick={CerrarTienda}>⬅</button>
                   <h2>🛒 Tu carrito</h2>
                 </div>
-                {carritoItems.map(item => (
-                  <div className="carrito-item" key={item.id}>
-                    <img src={item.imagen} alt={item.nombre} />
-                    <div className="info-carrito">
-                      <h4>{item.nombre}</h4>
-                      <button className="talla-btn">{item.talla}</button>
-                      <div className="contador">
-                        <button onClick={() => aumentarCantidadCarrito(item.id)}>+</button>
-                        <span>{item.cantidad}</span>
-                        <button onClick={() => disminuirCantidadCarrito(item.id)}>-</button>
+                
+                <div className="carrito-lista">
+                  {carritoItems.length > 0 ? (
+                    carritoItems.map(item => (
+                      <div className="carrito-item" key={item.id}>
+                        <img src={item.imagen} alt={item.nombre} />
+                        <div className="info-carrito">
+                          <h4>{item.nombre}</h4>
+                          <button className="talla-btn">{item.talla}</button>
+                          <div className="contador">
+                            <button onClick={() => aumentarCantidadCarrito(item.id)}>+</button>
+                            <span>{item.cantidad}</span>
+                            <button onClick={() => disminuirCantidadCarrito(item.id)}>-</button>
+                          </div>
+                          <button className="borrar-btn" onClick={() => eliminarItem(item.id)}>🗑</button>
+                        </div>
+                        <div className="precio-carrito">
+                          <span>${item.precioTotal.toFixed(2)}</span>
+                        </div>
                       </div>
-                      <button className="borrar-btn" onClick={() => eliminarItem(item.id)}>🗑</button>
-                    </div>
-                    <div className="precio-carrito">
-                      <span>${item.precioTotal.toFixed(2)}</span>
-                    </div>
-                  </div>
-                ))}
-                {carritoItems.length === 0 && <p className="carrito-vacio">El carrito está vacío.</p>}
+                    ))
+                  ) : (
+                    <p className="carrito-vacio">El carrito está vacío.</p>
+                  )}
+                </div>
+
                 {carritoItems.length > 0 && (
                   <div className="total-carrito">
                     <button onClick={realizarPago}>Pagar: ${totalCarrito.toFixed(2)}</button>
@@ -181,7 +230,6 @@ function NavbarTop() {
           )}
         </>
       ) : (
-        // ... (El código para el panel de administración se mantiene igual)
         <>
           <ul className="nav-links-top-admin admin-panel-top">
             <li><h1>Panel de Administración</h1></li>
@@ -208,7 +256,6 @@ function NavbarTop() {
                     <div><label>Correo</label><input type="email" value={correo} onChange={(e) => setCorreo(e.target.value)} /></div>
                     <div><label>Usuario</label><input type="text" value={usuario} onChange={(e) => setUsuario(e.target.value)} /></div>
                     <div><label>Contraseña</label><input type="password" value={contraseña} onChange={(e) => setContraseña(e.target.value)} /></div>
-                    {mensaje && <p>{mensaje}</p>}
                   </div>
                 ) : (
                   <div className="modal-grid">
@@ -229,6 +276,14 @@ function NavbarTop() {
                   </div>
                 )}
 
+                {mensaje && <p className="mensaje">{mensaje}</p>}
+                {datosRegistrados && (
+                  <div className="datos-confirmacion">
+                    <h4>Información guardada:</h4>
+                    <pre>{JSON.stringify(datosRegistrados, null, 2)}</pre>
+                  </div>
+                )}
+
                 <button
                   className="guardar-btn"
                   onClick={tipoModal === "usuario" ? manejarRegistroUsuario : manejarGuardarArticulo}
@@ -242,6 +297,6 @@ function NavbarTop() {
       )}
     </nav>
   );
-}
+};
 
 export default NavbarTop;

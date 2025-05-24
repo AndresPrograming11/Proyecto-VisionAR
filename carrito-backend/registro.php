@@ -19,18 +19,40 @@ if (!$nombre || !$correo || !$username || !$password) {
     exit;
 }
 
+// Generar token aleatorio y caducidad (1 hora)
+$reset_token        = bin2hex(random_bytes(16)); 
+$reset_token_expiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
+
+
 // Hashear la contraseña
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-// Insertar en la base de datos
-$sql = "INSERT INTO usuarios (nombre, correo, username, password, role) VALUES (?, ?, ?, ?, 'user')";
+// Preparar INSERT incluyendo token y expiry
+$sql = "INSERT INTO Usuarios
+          (nombre, correo, username, password, role, reset_token, reset_token_expiry)
+        VALUES (?,    ?,      ?,        ?,        'admin', ?,           ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssss", $nombre, $correo, $username, $hashedPassword);
+$stmt->bind_param(
+  "ssssss",
+  $nombre,
+  $correo,
+  $username,
+  $hashedPassword,
+  $reset_token,
+  $reset_token_expiry
+);
 
 if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Usuario registrado correctamente."]);
+    echo json_encode([
+      "success"     => true,
+      "message"     => "Usuario registrado correctamente.",
+      "resetToken"  => $reset_token
+    ]);
 } else {
-    echo json_encode(["success" => false, "message" => "Error al registrar: " . $conn->error]);
+    echo json_encode([
+      "success" => false,
+      "message" => "Error al registrar: " . $conn->error
+    ]);
 }
 
 $stmt->close();
