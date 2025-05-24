@@ -26,21 +26,31 @@ class OrdenModel {
         $result = $stmt->get_result();
         $ordenes = [];
 
+        // Prepara la consulta para obtener producto solo una vez
+        $sqlProd = "SELECT nombre, precio FROM articulos WHERE id = ? LIMIT 1";
+        $stmtProd = $this->conn->prepare($sqlProd);
+
         while ($row = $result->fetch_assoc()) {
             $row['items'] = json_decode($row['items'], true) ?? [];
 
             foreach ($row['items'] as &$item) {
+                if (!isset($item['producto_id'])) {
+                    $item['nombre_producto'] = "ID de producto faltante";
+                    $item['precio_unitario'] = 0;
+                    continue;
+                }
+
                 $productoId = intval($item['producto_id']);
-                $sqlProd = "SELECT nombre, precio FROM articulos WHERE id = ? LIMIT 1";
-                $stmtProd = $this->conn->prepare($sqlProd);
                 $stmtProd->bind_param("i", $productoId);
                 $stmtProd->execute();
                 $resProd = $stmtProd->get_result();
 
-                if ($resProd->num_rows > 0) {
+                if ($resProd && $resProd->num_rows > 0) {
                     $prodData = $resProd->fetch_assoc();
-                    $item['nombre_producto'] = $prodData['nombre'];
-                    $item['precio_unitario'] = $prodData['precio'];
+                    $nombreBase = $prodData['nombre'];
+                    $talla = isset($item['talla']) ? " - Talla: " . $item['talla'] : "";
+                    $item['nombre_producto'] = $nombreBase . $talla;
+                    $item['precio_unitario'] = floatval($prodData['precio']);
                 } else {
                     $item['nombre_producto'] = "Producto no encontrado";
                     $item['precio_unitario'] = 0;
@@ -50,6 +60,8 @@ class OrdenModel {
             $ordenes[] = $row;
         }
 
+        $stmtProd->close();
         return $ordenes;
     }
 }
+?>

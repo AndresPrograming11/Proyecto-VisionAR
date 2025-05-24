@@ -7,7 +7,6 @@ import {
   obtenerCarrito,  
 } from "../services/carritoItem";
 import { pagarConStripe } from "../services/pagoStripe";
-import { crearFactura } from '../services/factura';
 import { actualizarCantidadCarrito, eliminarDelCarritoBD } from '../services/carritoItem';
 
 function NavbarTop() {
@@ -169,40 +168,26 @@ const eliminarItem = async (itemId) => {
 };
   
 
-  const realizarPago = async () => {
-    if (!carritoItems?.length) {
-      return alert("Tu carrito está vacío.");
-    }
-  
-    const factura = {
-      usuario_id: userId,
-      fecha: new Date().toISOString().split('T')[0],
-      total: totalCarrito,
-      items: carritoItems.map(({ id, cantidad, talla }) => ({
-        producto_id: id,
-        cantidad,
-        talla: talla || null,
-      })),
-    };
-    console.log("Detalles de factura a crear:",factura); // 👈 Mostrar detalles
-    try {
-      const { success, id, message } = await crearFactura(factura);
-  
-      if (!success || !id) {
-        console.error("❌ Error al crear la factura:", message);
-        return alert("No se pudo crear la factura.");
-      }
-  
-      alert("Factura creada correctamente.");
-      pagarConStripe({ items: carritoItems, total: totalCarrito });
-  
-    } catch (error) {
-      console.error("🔥 Error inesperado:", error);
-      alert("Ocurrió un error al procesar el pago.");
-    }
-  };
-  
-  
+const realizarPago = () => {
+  if (!carritoItems?.length) {
+    return alert("Tu carrito está vacío.");
+  }
+
+  // Guardamos la info temporalmente para usarla después del pago
+  localStorage.setItem("facturaData", JSON.stringify({
+    usuario_id: userId,
+    fecha: new Date().toISOString().split('T')[0],
+    total: totalCarrito,
+    items: carritoItems.map(({ id, cantidad, talla }) => ({
+      producto_id: id,
+      cantidad,
+      talla: talla || null,
+    })),
+  }));
+
+  // Redirige al flujo de pago (Stripe u otra pasarela)
+  pagarConStripe({ items: carritoItems, total: totalCarrito });
+};
 
 
   // Funciones de ejemplo para agregar items (puedes eliminarlas o adaptarlas)
