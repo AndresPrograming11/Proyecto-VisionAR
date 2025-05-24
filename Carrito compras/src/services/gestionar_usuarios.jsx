@@ -1,5 +1,3 @@
-// src/services/gestionar_usuarios.jsx
-
 const API_URL = "http://localhost/carrito-backend/gestionar_usuarios.php";
 
 export const obtenerUsuarios = async () => {
@@ -28,7 +26,6 @@ export const actualizarUsuario = async (usuario) => {
   }
 };
 
-
 export const eliminarUsuario = async (id) => {
   try {
     const response = await fetch(API_URL, {
@@ -44,5 +41,40 @@ export const eliminarUsuario = async (id) => {
   } catch (error) {
     console.error("Error al eliminar usuario:", error);
     return { success: false, message: "Error en la solicitud" };
+  }
+};
+
+export const cambiarContrasenaConToken = async (token, nuevaContrasena) => {
+  try {
+    const response = await fetch(API_URL, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token,
+        nuevaContrasena,
+      }),
+    });
+
+    const text = await response.text(); // Lee la respuesta como texto
+    console.log("Respuesta del servidor:", text); // 👈 Para depuración
+
+    let data;
+    try {
+      data = JSON.parse(text); // Intenta convertir la respuesta a JSON
+    } catch (error) {
+      console.error("Error al parsear JSON:", error);
+      return { success: false, message: `Respuesta inesperada del servidor: ${text}` };
+    }
+
+    if (response.ok && data.success) {
+      return { success: true, message: data.message || "Contraseña cambiada correctamente." };
+    } else {
+      return { success: false, message: data.error || `Error del servidor: ${response.status}` };
+    }
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    return { success: false, message: `Error de red: ${error.message}. Asegúrate de que el servidor esté corriendo.` };
   }
 };

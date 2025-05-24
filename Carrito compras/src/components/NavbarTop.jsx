@@ -153,6 +153,8 @@ function NavbarTop() {
     }
     pagarConStripe(carritoItems);
   };
+
+  
   
 
  // Funciones para manejar la lógica del carrito
@@ -161,27 +163,52 @@ function NavbarTop() {
   setCarritoItems(updatedCarrito);
   calcularTotal(updatedCarrito);
 };
-  // Ejemplo de cómo llamar a la función cuando un artículo se agrega
-  const handleAgregarArticulo = () => {
-    const nuevoItem = {
-      id: 1, // ID de ejemplo
-      nombre: 'Camisa Azul',
-      precio: 20.00,
-      cantidad: 1,
-      talla: 'M',
-      precioTotal: 20.00, // precio * cantidad
-      imagen: 'url_de_imagen',
-    };
-    
-    agregarItemAlCarrito(nuevoItem);  // Agregar el artículo al carrito
+
+// Ejemplo de cómo llamar a la función cuando un artículo se agrega
+const handleAgregarCamisaAzul = () => {
+  const nuevoItem = {
+    id: 1, // ID de ejemplo
+    nombre: 'Camisa Azul',
+    precio: 20.00,
+    cantidad: 1,
+    talla: 'M',
+    precioTotal: 20.00, // precio * cantidad
+    imagen: 'https://media.falabella.com/falabellaCO/126474214_01/w=1500,h=1500,fit=pad',
   };
+  agregarItemAlCarrito(nuevoItem);  // Agregar la camisa azul al carrito
+};
 
+const handleAgregarPantalonNegro = () => {
+  const nuevoItem = {
+    id: 2, // Otro ID de ejemplo
+    nombre: 'Pantalón Negro',
+    precio: 35.00,
+    cantidad: 1,
+    talla: 'L',
+    precioTotal: 35.00, // precio * cantidad
+    imagen: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTp5DFqQ3JyvuSJmSEmsCBw93bzbe4RsLFW2fkOJjKNRQuP-pFA4E7DcinQklE-eXSiOJLJDAytkxnixHllyhVH-1VYPFFaEBXTAGR8MjP3WLAvAuC2WauSXw',
+  };
+  agregarItemAlCarrito(nuevoItem);  // Agregar el pantalón negro al carrito
+};
 
+const handleAgregarZapatosDeportivos = () => {
+  const nuevoItem = {
+    id: 3, // Un ID más
+    nombre: 'Zapatos Deportivos',
+    precio: 60.00,
+    cantidad: 1,
+    talla: '42',
+    precioTotal: 60.00, // precio * cantidad
+    imagen: 'https://versilia.com.co/cdn/shop/products/HOMBREADONAIAZULREF004640-3.jpg?v=1656173363&width=1200',
+  };
+  agregarItemAlCarrito(nuevoItem);  // Agregar los zapatos al carrito
+};
 
 const calcularTotal = (carrito) => {
   const total = carrito.reduce((sum, item) => sum + item.precioTotal, 0);
   setTotalCarrito(total);
 };
+
 
 console.log(carritoItems)
 
@@ -191,10 +218,10 @@ console.log(carritoItems)
         <>
           <ul className="nav-links-top">
             <li onClick={toggleMenuRedespegable}>{getTitle()}</li>
-            <button onClick={handleAgregarArticulo}>Agregar Camisa Azul</button>            
-            <li><button onClick={AbrirTienda} className={tiendaSeleccionada ? "tienda-seleccionada" : ""}>🛒</button></li>
-            <li><Link to="/services">👤</Link></li>
-            <li><Link to="/opciones"><button>///</button></Link></li>
+            <button onClick={handleAgregarCamisaAzul}>camisa azul al carrito</button>            
+            <button onClick={handleAgregarPantalonNegro}>pantalón negro al carrito</button>            
+            <button onClick={handleAgregarZapatosDeportivos}>Agregar los zapatos al carrito</button>            
+            <li><button onClick={AbrirTienda} className={tiendaSeleccionada ? "tienda-seleccionada" : ""}>🛒</button></li>            
           </ul>
 
           {tiendaSeleccionada && (
@@ -213,10 +240,10 @@ console.log(carritoItems)
                       <h4>{item.nombre}</h4>
                       <div className="contador">
                         <button onClick={() => aumentarCantidadCarrito(item.id)}>+</button>
-                        <span>{item.cantidad}</span>
-                        
+                        <span>{item.cantidad}</span>                        
                         <button onClick={() => disminuirCantidadCarrito(item.id)}>-</button>
                       </div>
+                      <span>{item.talla}</span>   
                       <button className="borrar-btn" onClick={() => eliminarItem(item.id)}>🗑</button>
                     </div>
                     <div className="precio-carrito">
@@ -228,7 +255,6 @@ console.log(carritoItems)
                 <p className="carrito-vacio">El carrito está vacío.</p>
               )}
             </div>
-
             {carritoItems.length > 0 && (
                   <div className="total-carrito">
                     <button onClick={() => realizarPago(carritoItems)}>Pagar: ${totalCarrito}</button>
@@ -236,7 +262,6 @@ console.log(carritoItems)
             )}
           </div>
         </div>
-
           )}
         </>
       ) : (
@@ -253,7 +278,6 @@ console.log(carritoItems)
               </li>
             )}
           </ul>
-
           {modalAbierto && (
             <div className="modal-overlay">
               <div className="modal-content">
@@ -285,7 +309,6 @@ console.log(carritoItems)
                     <div><label>Modelo 3D USDZ</label><input type="file" onChange={(e) => setUsdz(e.target.files[0])} /></div>
                   </div>
                 )}
-
                 {mensaje && <p className="mensaje">{mensaje}</p>}
                 {datosRegistrados && (
                   <div className="datos-confirmacion">
@@ -293,7 +316,6 @@ console.log(carritoItems)
                     <pre>{JSON.stringify(datosRegistrados, null, 2)}</pre>
                   </div>
                 )}
-
                 <button
                   className="guardar-btn"
                   onClick={tipoModal === "usuario" ? manejarRegistroUsuario : manejarGuardarArticulo}

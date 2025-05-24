@@ -19,6 +19,26 @@ export const agregarAlCarrito = (carritoActual, nuevoItem) => {
       return [...carritoActual, nuevoItem];
     }
   };
+
+  
+export async function agregarItemAlCarrito(item) {
+  try {
+    const response = await fetch("http://localhost/carrito-backend/agregar_carrito_item.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams(item)
+    });
+
+    const result = await response.text();
+    return result;
+  } catch (error) {
+    console.error("Error al agregar al carrito:", error);
+    throw error;
+  }
+}
+
   
   export const aumentarCantidad = (carritoActual, itemId) => {
     return carritoActual.map((item) =>

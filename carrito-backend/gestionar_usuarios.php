@@ -37,10 +37,11 @@ switch ($method) {
         echo json_encode($model->eliminarUsuario($data['id']));
         break;
 
-    case 'PATCH':
-        $data = json_decode(file_get_contents("php://input"), true);
-        echo json_encode($model->cambiarContrasenaConToken($data['token'], $data['nuevaContrasena']));
-        break;
+        case 'PATCH':
+            $data = json_decode(file_get_contents("php://input"), true);   
+         echo json_encode($model->cambiarContrasenaConToken($data['token'], $data['nuevaContrasena']));
+        break;    
+     
 
     default:
         echo json_encode(["success" => false, "message" => "Método no permitido"]);

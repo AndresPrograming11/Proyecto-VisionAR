@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../style/RestablecerPass.css";
+import { cambiarContrasenaConToken } from "../services/gestionar_usuarios"; // Importa la función
 
 function CambiarClave() {
   const [token, setToken] = useState("");
@@ -12,36 +13,26 @@ function CambiarClave() {
     setMensaje("");
     setError("");
 
-    if (!token) {
+    if (!token.trim()) {
       setError("Por favor, ingresa el token recibido por correo.");
       return;
     }
-    if (!nuevaContrasena) {
-      setError("Por favor, ingresa la nueva contraseña.");
+    if (nuevaContrasena.length < 8) {
+      setError("La nueva contraseña debe tener al menos 8 caracteres.");
       return;
     }
 
     setCargando(true);
 
     try {
-        const response = await fetch("http://localhost/carrito-backend/gestionar_usuarios.php", {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: token, nuevaContrasena: nuevaContrasena }),
-          });
-          
-      const text = await response.text();
+      const response = await cambiarContrasenaConToken(token, nuevaContrasena); // Usa la función importada
 
-      try {
-        const data = JSON.parse(text);
-
-        if (response.ok) {
-          setMensaje(data.message || "Contraseña cambiada correctamente.");
-        } else {
-          setError(data.error || "Error al cambiar la contraseña.");
-        }
-      } catch (e) {
-        setError(`Error parseando respuesta del servidor: ${text}`);
+      if (response.success) {
+        setMensaje(response.message);
+        setToken("");
+        setNuevaContrasena("");
+      } else {
+        setError(response.message);
       }
     } catch (err) {
       setError(`Error al conectar con el servidor: ${err.message}`);
@@ -70,6 +61,7 @@ function CambiarClave() {
           placeholder="Ingresa el token"
           value={token}
           onChange={(e) => setToken(e.target.value)}
+          disabled={cargando}
         />
 
         <label className="label">Nueva contraseña</label>
@@ -78,6 +70,7 @@ function CambiarClave() {
           placeholder="Ingresa la nueva contraseña"
           value={nuevaContrasena}
           onChange={(e) => setNuevaContrasena(e.target.value)}
+          disabled={cargando}
         />
 
         <button onClick={handleChangePassword} disabled={cargando}>

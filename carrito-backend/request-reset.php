@@ -65,7 +65,7 @@ $stmt_update->execute();
 $stmt_update->close();
 
 // Construir enlace para restablecer contraseña
-$resetLink = "https://tu-dominio.com/restablecerpass?token=" . urlencode($token);
+$resetLink = "Tu token es :" . urlencode($token);
 
 // Preparar correo (asegúrate de que PHPMailer esté configurado correctamente)
 $mail = new PHPMailer(true);
@@ -74,10 +74,10 @@ try {
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
-    $mail->Username   = 'carlls01w@gmail.com';  
-    $mail->Password   = 'jlxbqzlafagqepyb';             
+    $mail->Username   = 'carlls01w@gmail.com';
+    $mail->Password   =  'jlxbqzlafagqepyb';
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = 587;
+    $mail->Port       ='587' ;
 
     // Remitente y destinatario
     $mail->setFrom('no-reply@tu-dominio.com', 'Carrito Compras');

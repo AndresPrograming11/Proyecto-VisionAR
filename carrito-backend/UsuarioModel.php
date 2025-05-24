@@ -2,6 +2,9 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
+
+require_once 'conexion.php';
+
 class UsuarioModel {
     
     private $conn;
@@ -81,41 +84,35 @@ class UsuarioModel {
             return ["success" => false, "message" => "Error al eliminar el usuario: " . $this->conn->error];
         }
     }
-
     public function cambiarContrasenaConToken($token, $nuevaContrasena) {
-        if (!$token || !$nuevaContrasena) {
-            return ['success' => false, 'message' => 'Token o contraseña faltante.'];
-        }
-
-        $stmt = $this->conn->prepare("
-            SELECT id
-            FROM Usuarios
-            WHERE reset_token = ? AND reset_token_expiry > NOW()
-        ");
+        // Verificar existencia del token
+        $stmt = $this->conn->prepare("SELECT id FROM usuarios WHERE reset_token = ?");
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
-
+    
         if ($result->num_rows === 0) {
-            return ['success' => false, 'message' => 'Token inválido o expirado.'];
+            return ['success' => false, 'message' => 'Token inválido.'];
         }
-
+    
         $usuario = $result->fetch_assoc();
         $id_usuario = $usuario['id'];
+    
+        // Actualizar directamente la contraseña
         $passwordHash = password_hash($nuevaContrasena, PASSWORD_DEFAULT);
-
-        $stmt = $this->conn->prepare("
-            UPDATE Usuarios
-            SET password = ?, reset_token = NULL, reset_token_expiry = NULL
-            WHERE id = ?
-        ");
+        $stmt = $this->conn->prepare("UPDATE usuarios SET password = ?, reset_token = NULL WHERE id = ?");
         $stmt->bind_param("si", $passwordHash, $id_usuario);
-
+    
         if ($stmt->execute()) {
             return ['success' => true, 'message' => 'Contraseña actualizada correctamente.'];
         } else {
-            return ['success' => false, 'message' => 'Error al actualizar la contraseña: ' . $this->conn->error];
+            return ['success' => false, 'message' => 'Error al actualizar la contraseña.'];
         }
     }
-}
+    }
+    
+
+    
+    
+
 ?>

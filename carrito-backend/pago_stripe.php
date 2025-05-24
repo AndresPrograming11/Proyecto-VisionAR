@@ -13,7 +13,7 @@ require __DIR__ . '/vendor/autoload.php';
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 
-Stripe::setApiKey('sk_test_51RM4t2FTCH3K5sJLBrzKhYICcdcecFnaeCeZPoPhFS33HdbzhiVFFw2C1D4jWKn8qeGTuYwuzzYizGXiGSRr22y4006ufK6aHo');
+Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
 $input = json_decode(file_get_contents("php://input"), true);
 $items = $input['items'];
