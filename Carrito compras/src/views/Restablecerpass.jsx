@@ -1,24 +1,24 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
 import "../style/RestablecerPass.css";
 
 function RestablecerPass() {
   const [correo, setCorreo] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
-  const [cargando, setCargando] = useState(false); // Estado para manejar el cargando
-  const navigate = useNavigate(); // Inicializar useNavigate
+  const [cargando, setCargando] = useState(false);
 
   const handleResetPassword = async () => {
     setMensaje("");
     setError("");
+
     if (!correo) {
       setError("Por favor, ingresa tu correo electrónico.");
       return;
     }
+
     setCargando(true);
+
     try {
-      console.log(correo); // Verifica el valor del correo
       const response = await fetch("http://localhost/carrito-backend/request-reset.php", {
         method: "POST",
         headers: {
@@ -26,20 +26,22 @@ function RestablecerPass() {
         },
         body: JSON.stringify({ email: correo }),
       });
-      const text = await response.text(); // Cambia a text para ver la respuesta completa
+
+      const text = await response.text();
+
       try {
         const data = JSON.parse(text);
+
         if (response.ok) {
-          setMensaje(data.message || "Correo enviado correctamente.");
-          setTimeout(() => {
-            navigate("/login");
-          }, 3000);
+          setMensaje(data.message || "Se envió un enlace de restablecimiento a tu correo.");
         } else {
           setError(data.error || "Error al enviar correo.");
         }
+
       } catch (e) {
-        setError(`Error parseando respuesta del servidor. Respuesta recibida: ${text} ${e}`);
+        setError(`Error parseando respuesta del servidor: ${text}`);
       }
+
     } catch (err) {
       setError(`Error al conectar con el servidor: ${err.message}`);
     } finally {
@@ -64,12 +66,18 @@ function RestablecerPass() {
         <input
           type="email"
           placeholder="Ingresa tu correo"
+          value={correo}
           onChange={(e) => setCorreo(e.target.value)}
         />
         <button onClick={handleResetPassword} disabled={cargando}>
           {cargando ? "Enviando..." : "Enviar correo"}
         </button>
-        {mensaje && <div className="mensaje-success">{mensaje}</div>}
+        {mensaje && (
+          <div className="mensaje-success">
+            {mensaje}
+            <p>Una vez que tengas el token, dirígete a <a href="/cambiarclave">Cambiar contraseña</a>.</p>
+          </div>
+        )}
         {error && <div className="mensaje-error">{error}</div>}
       </div>
     </div>

@@ -130,9 +130,23 @@ function AdminArticulos() {
               <td>{art.descripcion}</td>
               <td>${parseFloat(art.precio)}</td>
               <td>
-                {art.modelo_3D_GLB && <a href={art.modelo_3D_GLB} target="_blank" rel="noopener noreferrer">GLB</a>}
-                {" / "}
-                {art.modelo_3D_USDZ && <a href={art.modelo_3D_USDZ} target="_blank" rel="noopener noreferrer">USDZ</a>}
+              {art.modelo_3D_GLB && (
+                <a
+                  href={`http://localhost/carrito-backend/${art.modelo_3D_GLB}`}
+                  download
+                >
+                  GLB
+                </a>
+              )}
+              {" / "}
+              {art.modelo_3D_USDZ && (
+                <a
+                  href={`http://localhost/carrito-backend/${art.modelo_3D_USDZ}`}
+                  download
+                >
+                  USDZ
+                </a>
+              )}
               </td>
               <td>{art.categoria}</td>
               <td>
