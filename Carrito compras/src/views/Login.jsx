@@ -10,18 +10,20 @@ function Login({ autentificar, setRole }) {
 
   const handleLogin = async () => {
     const res = await loginUsuario(Usuario, Contraseña);
-    if (res.success && res.role) {
+    if (res.success && res.role && res.id) { // Verificar success, role e id
       autentificar(true);
       setRole(res.role);
       localStorage.setItem("isAuth", "true");
       localStorage.setItem("role", res.role);
+      localStorage.setItem("userId", res.id); // Almacenar el ID
       navigate(res.role === "admin" ? "/admin" : "/");
     } else {
       alert(res.message || "Credenciales incorrectas");
     }
   };
   
-  
+  const userId = localStorage.getItem("userId");
+console.log("El ID del usuario es:", userId);
 
   return (
     <div className="contenedor">

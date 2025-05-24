@@ -17,8 +17,8 @@ function CambiarClave() {
       setError("Por favor, ingresa el token recibido por correo.");
       return;
     }
-    if (nuevaContrasena.length < 8) {
-      setError("La nueva contraseña debe tener al menos 8 caracteres.");
+    if (nuevaContrasena.length < 4) {
+      setError("La nueva contraseña debe tener al menos 4 caracteres.");
       return;
     }
 

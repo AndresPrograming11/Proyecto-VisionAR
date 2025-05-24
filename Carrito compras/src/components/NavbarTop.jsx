@@ -1,17 +1,15 @@
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../style/NavbarTop.css";
-import { useState, useEffect } from "react";
 import { registrarUsuario } from "../services/registro";
 import { crearArticulo } from "../services/articulos";
-
-
 import {
   agregarAlCarrito,
   aumentarCantidad,
   disminuirCantidad,
   eliminarDelCarrito,
+  obtenerCarrito,
 } from "../services/carritoItem";
-
 import { pagarConStripe } from "../services/pagoStripe";
 
 function NavbarTop() {
@@ -20,9 +18,11 @@ function NavbarTop() {
   const [tiendaSeleccionada, setTiendaSeleccionada] = useState(false);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [tipoModal, setTipoModal] = useState("usuario");
-  const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");  
+  const [userRole, setUserRole] = useState(localStorage.getItem("role") || "user");
   const [carritoItems, setCarritoItems] = useState([]);
   const [totalCarrito, setTotalCarrito] = useState(0);
+  const [mostrarCarrito, setMostrarCarrito] = useState(false);
+  const userId = localStorage.getItem("userId");
 
   // Usuario
   const [nombre, setNombre] = useState("");
@@ -47,7 +47,13 @@ function NavbarTop() {
   }, []);
 
   useEffect(() => {
-    const nuevoTotal = carritoItems.reduce((sum, item) => sum + item.precioTotal, 0);
+    if (userId) {
+      obtenerCarrito(userId).then(setCarritoItems);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    const nuevoTotal = carritoItems.reduce((sum, item) => sum + (Number(item.precioTotal) || Number(item.precio) || 0), 0);
     setTotalCarrito(nuevoTotal);
   }, [carritoItems]);
 
@@ -122,11 +128,6 @@ function NavbarTop() {
     }
   };
 
-  useEffect(() => {
-    const total = carritoItems.reduce((sum, item) => sum + item.precioTotal, 0);
-    setTotalCarrito(total);
-  }, [carritoItems]);
-
   const toggleCarrito = () => {
     setMostrarCarrito(!mostrarCarrito);
   };
@@ -154,63 +155,60 @@ function NavbarTop() {
     pagarConStripe(carritoItems);
   };
 
-  
-  
 
- // Funciones para manejar la lógica del carrito
- const agregarItemAlCarrito = (nuevoItem) => {
-  const updatedCarrito = agregarAlCarrito(carritoItems, nuevoItem);
-  setCarritoItems(updatedCarrito);
-  calcularTotal(updatedCarrito);
-};
-
-// Ejemplo de cómo llamar a la función cuando un artículo se agrega
-const handleAgregarCamisaAzul = () => {
-  const nuevoItem = {
-    id: 1, // ID de ejemplo
-    nombre: 'Camisa Azul',
-    precio: 20.00,
-    cantidad: 1,
-    talla: 'M',
-    precioTotal: 20.00, // precio * cantidad
-    imagen: 'https://media.falabella.com/falabellaCO/126474214_01/w=1500,h=1500,fit=pad',
+  // Funciones para manejar la lógica del carrito
+  const agregarItemAlCarrito = (nuevoItem) => {
+    const updatedCarrito = agregarAlCarrito(carritoItems, nuevoItem);
+    setCarritoItems(updatedCarrito);
+    calcularTotal(updatedCarrito);
   };
-  agregarItemAlCarrito(nuevoItem);  // Agregar la camisa azul al carrito
-};
 
-const handleAgregarPantalonNegro = () => {
-  const nuevoItem = {
-    id: 2, // Otro ID de ejemplo
-    nombre: 'Pantalón Negro',
-    precio: 35.00,
-    cantidad: 1,
-    talla: 'L',
-    precioTotal: 35.00, // precio * cantidad
-    imagen: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTp5DFqQ3JyvuSJmSEmsCBw93bzbe4RsLFW2fkOJjKNRQuP-pFA4E7DcinQklE-eXSiOJLJDAytkxnixHllyhVH-1VYPFFaEBXTAGR8MjP3WLAvAuC2WauSXw',
+  // Ejemplo de cómo llamar a la función cuando un artículo se agrega
+  const handleAgregarCamisaAzul = () => {
+    const nuevoItem = {
+      id: Date.now() + 1, // ID único
+      nombre: 'Camisa Azul',
+      precio: 20.00,
+      cantidad: 1,
+      talla: 'M',
+      precioTotal: 20.00,
+      imagen: 'https://media.falabella.com/falabellaCO/126474214_01/w=1500,h=1500,fit=pad',
+    };
+    agregarItemAlCarrito(nuevoItem);
   };
-  agregarItemAlCarrito(nuevoItem);  // Agregar el pantalón negro al carrito
-};
 
-const handleAgregarZapatosDeportivos = () => {
-  const nuevoItem = {
-    id: 3, // Un ID más
-    nombre: 'Zapatos Deportivos',
-    precio: 60.00,
-    cantidad: 1,
-    talla: '42',
-    precioTotal: 60.00, // precio * cantidad
-    imagen: 'https://versilia.com.co/cdn/shop/products/HOMBREADONAIAZULREF004640-3.jpg?v=1656173363&width=1200',
+  const handleAgregarPantalonNegro = () => {
+    const nuevoItem = {
+      id: Date.now() + 2, // ID único
+      nombre: 'Pantalón Negro',
+      precio: 35.00,
+      cantidad: 1,
+      talla: 'L',
+      precioTotal: 35.00,
+      imagen: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTp5DFqQ3JyvuSJmSEmsCBw93bzbe4RsLFW2fkOJjKNRQuP-pFA4E7DcinQklE-eXSiOJLJDAytkxnixHllyhVH-1VYPFFaEBXTAGR8MjP3WLAvAuC2WauSXw',
+    };
+    agregarItemAlCarrito(nuevoItem);
   };
-  agregarItemAlCarrito(nuevoItem);  // Agregar los zapatos al carrito
-};
 
-const calcularTotal = (carrito) => {
-  const total = carrito.reduce((sum, item) => sum + item.precioTotal, 0);
-  setTotalCarrito(total);
-};
+  const handleAgregarZapatosDeportivos = () => {
+    const nuevoItem = {
+      id: Date.now() + 3, // ID único
+      nombre: 'Zapatos Deportivos',
+      precio: 60.00,
+      cantidad: 1,
+      talla: '42',
+      precioTotal: 60.00,
+      imagen: 'https://versilia.com.co/cdn/shop/products/HOMBREADONAIAZULREF004640-3.jpg?v=1656173363&width=1200',
+    };
+    agregarItemAlCarrito(nuevoItem);
+  };
 
+  const calcularTotal = (carrito) => {
+    const total = carrito.reduce((sum, item) => sum + (Number(item.precioTotal) || Number(item.precio) || 0), 0);
+    setTotalCarrito(total);
+  };
 
-console.log(carritoItems)
+  console.log(carritoItems);
 
   return (
     <nav className="navbar-top">
@@ -218,10 +216,10 @@ console.log(carritoItems)
         <>
           <ul className="nav-links-top">
             <li onClick={toggleMenuRedespegable}>{getTitle()}</li>
-            <button onClick={handleAgregarCamisaAzul}>camisa azul al carrito</button>            
-            <button onClick={handleAgregarPantalonNegro}>pantalón negro al carrito</button>            
-            <button onClick={handleAgregarZapatosDeportivos}>Agregar los zapatos al carrito</button>            
-            <li><button onClick={AbrirTienda} className={tiendaSeleccionada ? "tienda-seleccionada" : ""}>🛒</button></li>            
+            <button onClick={handleAgregarCamisaAzul}>camisa azul al carrito</button>
+            <button onClick={handleAgregarPantalonNegro}>pantalón negro al carrito</button>
+            <button onClick={handleAgregarZapatosDeportivos}>Agregar los zapatos al carrito</button>
+            <li><button onClick={AbrirTienda} className={tiendaSeleccionada ? "tienda-seleccionada" : ""}>🛒</button></li>
           </ul>
 
           {tiendaSeleccionada && (
@@ -230,38 +228,38 @@ console.log(carritoItems)
                 <div className="titulo-carrito">
                   <button className="cerrar-carrito" onClick={CerrarTienda}>⬅</button>
                   <h2>🛒 Tu carrito</h2>
-                </div>                
+                </div>
                 <div className="carrito-lista">
-              {carritoItems.length > 0 ? (
-                carritoItems.map(item => (
-                  <div className="carrito-item" key={item.id}>
-                    <img src={item.imagen} alt={item.nombre} />
-                    <div className="info-carrito">
-                      <h4>{item.nombre}</h4>
-                      <div className="contador">
-                        <button onClick={() => aumentarCantidadCarrito(item.id)}>+</button>
-                        <span>{item.cantidad}</span>                        
-                        <button onClick={() => disminuirCantidadCarrito(item.id)}>-</button>
+                  {carritoItems.length > 0 ? (
+                    carritoItems.map(item => (
+                      <div className="carrito-item" key={item.id}>
+                        {item.imagen && <img src={item.imagen} alt={item.nombre} />}
+                        <div className="info-carrito">
+                          <h4>{item.nombre || item.articulo_id}</h4>
+                          <div className="contador">
+                            <button onClick={() => aumentarCantidadCarrito(item.id)}>+</button>
+                            <span>{item.cantidad}</span>
+                            <button onClick={() => disminuirCantidadCarrito(item.id)}>-</button>
+                          </div>
+                          <span>Talla: {item.talla}</span>
+                          <button className="borrar-btn" onClick={() => eliminarItem(item.id)}>🗑</button>
+                        </div>
+                        <div className="precio-carrito">
+                          <span>${(Number(item.precioTotal) || Number(item.precio) || 0).toFixed(2)}</span>
+                        </div>
                       </div>
-                      <span>{item.talla}</span>   
-                      <button className="borrar-btn" onClick={() => eliminarItem(item.id)}>🗑</button>
-                    </div>
-                    <div className="precio-carrito">
-                      <span>${item.precioTotal}</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="carrito-vacio">El carrito está vacío.</p>
-              )}
-            </div>
-            {carritoItems.length > 0 && (
+                    ))
+                  ) : (
+                    <p className="carrito-vacio">El carrito está vacío.</p>
+                  )}
+                </div>
+                {carritoItems.length > 0 && (
                   <div className="total-carrito">
-                    <button onClick={() => realizarPago(carritoItems)}>Pagar: ${totalCarrito}</button>
+                    <button onClick={() => realizarPago(carritoItems)}>Pagar: ${totalCarrito.toFixed(2)}</button>
                   </div>
-            )}
-          </div>
-        </div>
+                )}
+              </div>
+            </div>
           )}
         </>
       ) : (
@@ -329,6 +327,6 @@ console.log(carritoItems)
       )}
     </nav>
   );
-};
+}
 
 export default NavbarTop;

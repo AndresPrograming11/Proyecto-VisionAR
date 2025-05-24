@@ -10,6 +10,7 @@ function Camisas({ carritoItems, setCarritoItems }) {
   const [camisasData, setCamisasData] = useState([]);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  
 
   useEffect(() => {
     const fetchData = async () => {

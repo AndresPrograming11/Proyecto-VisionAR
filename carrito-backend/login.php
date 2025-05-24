@@ -10,7 +10,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 $username = $data["username"] ?? '';
 $password = $data["password"] ?? '';
 
-$sql = "SELECT username, password, role FROM usuarios WHERE username = ?";
+$sql = "SELECT id, username, password, role FROM usuarios WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
 $stmt->execute();
@@ -22,9 +22,10 @@ if ($result->num_rows > 0) {
         echo json_encode([
             "success" => true,
             "message" => "Login exitoso",
+            "id" => $user["id"],
             "role" => $user["role"]
         ]);
-    } else {
+    }else {
         echo json_encode(["success" => false, "message" => "Contraseña incorrecta"]);
     }
 } else {
