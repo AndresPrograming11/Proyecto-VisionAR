@@ -35,7 +35,7 @@ export const agregarAlCarrito = (carritoActual, nuevoItem) => {
 
 export async function obtenerCarrito(userId) {
   try {
-    const response = await fetch(`http://localhost/carrito-backend/obtener_carrito.php?usuario_id=${userId}`);
+    const response = await fetch(`http://localhost/carrito-backend/Models/obtener_carrito.php?usuario_id=${userId}`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -45,7 +45,7 @@ export async function obtenerCarrito(userId) {
 }
 
 
-const API_URL = "http://localhost/carrito-backend/"; // Ajusta esta URL
+const API_URL = "http://localhost/carrito-backend/Models/"; // Ajusta esta URL
 
 export const actualizarCantidadCarrito = async (id, cantidad) => {
   const response = await fetch(`${API_URL}/actualizar_carrito.php`, {
@@ -70,18 +70,6 @@ export const eliminarDelCarritoBD = async (id) => {
 
   return response.json();
 };
-
-export const cargarCarrito = async () => {
-  if (userId) {
-    try {
-      const carrito = await obtenerCarrito(userId);
-      setCarritoItems(carrito);
-    } catch (error) {
-      console.error("Error al cargar el carrito:", error);
-    }
-  }
-};
-
 
 
 
@@ -126,7 +114,7 @@ export async function agregarItemAlCarrito(carritoActual, nuevoItem) {
     }
 
     // Enviar datos al backend
-    const response = await fetch("http://localhost/carrito-backend/agregar_carrito_item.php", {
+    const response = await fetch("http://localhost/carrito-backend/Models/agregar_carrito_item.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",

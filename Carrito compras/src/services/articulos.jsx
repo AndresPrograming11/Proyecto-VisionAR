@@ -1,6 +1,6 @@
 export const crearArticulo = async (formData) => {
     try {
-      const response = await fetch("http://localhost/carrito-backend/crear_articulo.php", {
+      const response = await fetch("http://localhost/carrito-backend/Models/crear_articulo.php", {
         method: "POST",
         body: formData, // importante: enviar FormData, no JSON
       });
@@ -13,7 +13,7 @@ export const crearArticulo = async (formData) => {
   
   export const obtenerArticulos = async () => {
     try {
-      const response = await fetch("http://localhost/carrito-backend/listar_articulos.php");
+      const response = await fetch("http://localhost/carrito-backend/Models/listar_articulos.php");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

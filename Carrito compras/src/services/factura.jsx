@@ -2,7 +2,7 @@
 
 export const crearFactura = async (factura) => {
   try {
-    const response = await fetch("http://localhost/carrito-backend/facturaController.php", {
+    const response = await fetch("http://localhost/carrito-backend/controller/facturaController.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

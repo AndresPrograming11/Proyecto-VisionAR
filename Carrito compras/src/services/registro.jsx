@@ -1,6 +1,6 @@
 export const registrarUsuario = async (nombre, correo, usuario, contraseña) => {
   try {
-    const response = await fetch("http://localhost/carrito-backend/registro.php", {
+    const response = await fetch("http://localhost/carrito-backend/Models//registro.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -19,7 +19,7 @@ function RestablecerPass() {
     setCargando(true);
 
     try {
-      const response = await fetch("http://localhost/carrito-backend/request-reset.php", {
+      const response = await fetch("http://localhost/carrito-backend/Models/request-reset.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

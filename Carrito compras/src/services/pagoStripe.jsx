@@ -11,7 +11,7 @@ export const pagarConStripe = async ({ items, total }) => {
   const stripe = await stripePromise;
 
   try {
-    const response = await fetch("http://localhost/carrito-backend/pago_stripe.php", {
+    const response = await fetch("http://localhost/carrito-backend/Models/pago_stripe.php", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

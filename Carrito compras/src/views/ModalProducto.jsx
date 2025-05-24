@@ -44,7 +44,6 @@ const ModalProducto = ({ producto, onClose, setCarritoItems, carritoActual }) =>
     }
   };
 
-  // --- Funcionalidad para descargar modelos 3D ---
   const esperar = (ms) => new Promise((res) => setTimeout(res, ms));
 
   const descargarModelos = async (producto) => {
@@ -61,10 +60,35 @@ const ModalProducto = ({ producto, onClose, setCarritoItems, carritoActual }) =>
         document.body.appendChild(enlace);
         enlace.click();
         document.body.removeChild(enlace);
-        await esperar(1000); // Espera 1 segundo antes de continuar
+        await esperar(1000);
       }
     }
   };
+
+  // --- Clasificación del producto ---
+  const obtenerTipoPrenda = (producto) => {
+    const nombre = producto.nombre.toLowerCase();
+    if (nombre.includes("camisa")) return "camisa";
+    if (nombre.includes("pantalón") || nombre.includes("pantalon")) return "pantalón";
+    if (nombre.includes("uniforme")) return "uniforme";
+    return "otro";
+  };
+
+  const obtenerTallasPorTipo = (tipo) => {
+    switch (tipo) {
+      case "camisa":
+        return ["S", "M", "L", "XL"];
+      case "pantalón":
+        return ["28", "30", "32", "34", "36"];
+      case "uniforme":
+        return ["S", "M", "L", "XL", "XXL"];
+      default:
+        return ["S", "M", "L", "XL"];
+    }
+  };
+
+  const tipoPrenda = obtenerTipoPrenda(producto);
+  const tallasDisponibles = obtenerTallasPorTipo(tipoPrenda);
 
   return (
     <div className="modal-detalle">
@@ -97,7 +121,7 @@ const ModalProducto = ({ producto, onClose, setCarritoItems, carritoActual }) =>
           <div className="control-seccion">
             <p>Talla</p>
             <div className="contador-detalle">
-              {["S", "M", "L", "XL"].map((talla) => (
+              {tallasDisponibles.map((talla) => (
                 <button
                   key={talla}
                   className={tallaSeleccionada === talla ? "seleccionada" : ""}
@@ -129,4 +153,3 @@ const ModalProducto = ({ producto, onClose, setCarritoItems, carritoActual }) =>
 };
 
 export default ModalProducto;
-

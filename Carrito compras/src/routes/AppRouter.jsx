@@ -46,6 +46,9 @@ function AppRouter() {
         <Route path="/registro" element={<Registro />} />
         <Route path="/restablecerpass" element={<RestablecerPass />} />        
         <Route path="/cambiarclave" element={<CambiarClave />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
+        
 
         {/* Usuario autenticado */}
         {isAuth && role === "user" && (
@@ -73,8 +76,7 @@ function AppRouter() {
               path="/uniformes"
               element={<Uniformes carritoItems={carritoItems} setCarritoItems={setCarritoItems} />}
             />
-            <Route path="/success" element={<Success />} />
-            <Route path="/cancel" element={<Cancel />} />
+         
           </>
         )}
 

@@ -1,4 +1,4 @@
-const API_URL = "http://localhost/carrito-backend/gestionar_usuarios.php";
+const API_URL = "http://localhost/carrito-backend/Models/gestionar_usuarios.php";
 
 export const obtenerUsuarios = async () => {
   try {

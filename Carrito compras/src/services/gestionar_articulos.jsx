@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost/carrito-backend/articuloscontroller.php";
+const BASE_URL = "http://localhost/carrito-backend/controller/articuloscontroller.php";
 
 export const obtenerArticulos = async () => {
   try {
