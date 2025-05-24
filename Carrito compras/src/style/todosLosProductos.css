@@ -1,37 +1,37 @@
-.productos-container h1, .pantalones-container h1 {  
-  padding-top: 60px;
+.productos-container h1 {  
+margin-top:50px;
+text-align: center;
 }
 
-.productos-grid, .pantalones-grid {
+.productos-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 20px 0;
   width: calc(100% - 200px);
-  margin-left: 150px; 
-}
+  }
 
-.producto-card, .pantalon-card {
+.producto-card {
   background-color: #f4f4f4;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  text-align: center;  
 }
 
-.producto-img, .pantalon-img {
+.producto-img{
   width: 100px;
   height: 100px;
   border-radius: 4px;
   object-fit: cover;
 }
 
-.producto-card h3, .pantalon-card h3 {
+.producto-card h3 {
   font-size: 18px;
   margin: 10px 0;
 }
 
-.producto-card p, .pantalon-card p {
+.producto-card p {
   font-size: 14px;
   color: #555;
 }
@@ -160,16 +160,24 @@
   font-weight: bold;
 }
 
+
 @media (max-width: 768px) {
-  .productos-grid, .pantalones-grid {
+  .productos-grid {
     grid-template-columns: repeat(2, 1fr);
-    width: calc(100% - 200px);
+    width: 100%;
+  }
+
+  .productos-container h1 {
+    padding-top: 30px; /* Opcional si deseas ajustar también el título */
   }
 }
 
 @media (max-width: 480px) {
-  .productos-grid, .pantalones-grid {
+  .productos-grid {
     grid-template-columns: repeat(1, 1fr);
-    width: calc(100% - 200px);
+    width: 100%;
+  }
+  .productos-container h1 {
+    padding-top: 20px; /* Más compacto aún si es necesario */
   }
 }

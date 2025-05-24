@@ -10,6 +10,7 @@ import {
   eliminarDelCarrito,
 } from "../services/carritoItem";
 import { pagarConStripe } from "../services/pagoStripe";
+import { crearFactura } from '../services/factura';
 
 function NavbarTop() {
   const location = useLocation();
@@ -162,17 +163,41 @@ function NavbarTop() {
     eliminarDelCarrito(updatedCarrito, itemId);
   };
 
-  const realizarPago = () => {
-    if (carritoItems.length === 0) {
-      alert("Tu carrito está vacío.");
-      return;
+  const realizarPago = async () => {
+    if (!carritoItems?.length) {
+      return alert("Tu carrito está vacío.");
     }
-
-    pagarConStripe({
-      items: carritoItems,
-      total: totalCarrito || 0,
-    });
+  
+    const factura = {
+      usuario_id: userId,
+      fecha: new Date().toISOString().split('T')[0],
+      total: totalCarrito,
+      items: carritoItems.map(({ id, cantidad, talla }) => ({
+        producto_id: id,
+        cantidad,
+        talla: talla || null,
+      })),
+    };
+    console.log("Detalles de factura a crear:",factura); // 👈 Mostrar detalles
+    try {
+      const { success, id, message } = await crearFactura(factura);
+  
+      if (!success || !id) {
+        console.error("❌ Error al crear la factura:", message);
+        return alert("No se pudo crear la factura.");
+      }
+  
+      alert("Factura creada correctamente.");
+      pagarConStripe({ items: carritoItems, total: totalCarrito });
+  
+    } catch (error) {
+      console.error("🔥 Error inesperado:", error);
+      alert("Ocurrió un error al procesar el pago.");
+    }
   };
+  
+  
+
 
   // Funciones de ejemplo para agregar items (puedes eliminarlas o adaptarlas)
   const handleAgregarCamisaAzul = () => {
@@ -251,7 +276,7 @@ function NavbarTop() {
                           <button className="borrar-btn" onClick={() => eliminarItem(item.id)}>🗑</button>
                         </div>
                         <div className="precio-carrito">
-                          <span>${((parseFloat(item.precio) || 0) * (item.cantidad || 1)).toFixed(2)}</span>
+                          <span>${((parseFloat(item.precio) || 0) * (item.cantidad || 1))}</span>
                         </div>
                       </div>
                     ))
@@ -261,7 +286,7 @@ function NavbarTop() {
                 </div>
                 {Array.isArray(carritoItems) && carritoItems.length > 0 && (
                   <div className="total-carrito">
-                    <button onClick={realizarPago}>Pagar: ${totalCarrito.toFixed(2)}</button>
+                    <button onClick={realizarPago}>Pagar: ${totalCarrito}</button>
                   </div>
                 )}
               </div>

@@ -35,7 +35,7 @@ foreach ($items as $item) {
 
     $line_items[] = [
         'price_data' => [
-            'currency' => 'mxn',
+            'currency' => 'COP',
             'product_data' => ['name' => $item['articulo_id']],
             'unit_amount' => $precioCentavos,
         ],

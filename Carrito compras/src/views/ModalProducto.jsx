@@ -44,6 +44,28 @@ const ModalProducto = ({ producto, onClose, setCarritoItems, carritoActual }) =>
     }
   };
 
+  // --- Funcionalidad para descargar modelos 3D ---
+  const esperar = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  const descargarModelos = async (producto) => {
+    const archivos = [
+      { url: producto.modelo_3D_GLB, nombre: `${producto.nombre}.glb` },
+      { url: producto.modelo_3D_USDZ, nombre: `${producto.nombre}.usdz` },
+    ];
+
+    for (const { url, nombre } of archivos) {
+      if (url) {
+        const enlace = document.createElement("a");
+        enlace.href = `${BASE_URL}${url}`;
+        enlace.download = nombre;
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
+        await esperar(1000); // Espera 1 segundo antes de continuar
+      }
+    }
+  };
+
   return (
     <div className="modal-detalle">
       <div className="modal-contenido">
@@ -89,12 +111,17 @@ const ModalProducto = ({ producto, onClose, setCarritoItems, carritoActual }) =>
 
           <div className="control-seccion">
             <p>Precio Total</p>
-            <span>${precioTotal.toFixed(2)}</span>
+            <span>${precioTotal}</span>
           </div>
         </div>
 
         <div className="botones-detalle">
-          <button onClick={AgregarAlCarrito}>Agregar al carrito de compras</button>
+          <button onClick={() => descargarModelos(producto)}>
+            Visualizar en realidad aumentada
+          </button>
+          <button onClick={AgregarAlCarrito}>
+            Agregar al carrito de compras
+          </button>
         </div>
       </div>
     </div>
@@ -102,3 +129,4 @@ const ModalProducto = ({ producto, onClose, setCarritoItems, carritoActual }) =>
 };
 
 export default ModalProducto;
+

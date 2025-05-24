@@ -1,17 +1,16 @@
 .navbar {
-  width: 200px;  
-  height: 100vh; 
-  background: #333;
+  width: 200px;
+  height: 100vh;
+  background: red;
   position: fixed;
-  top: 0; 
+  top: 0;
   left: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;  
-  background: red;
+  align-items: center;
 }
 
-.titulo{
+.titulo {
   color: white;
   font-size: 40px;
   text-align: center;
@@ -24,7 +23,6 @@
   margin: 0;
   width: 100%;
 }
-
 
 .nav-links li {
   width: 100%;
@@ -46,7 +44,6 @@
   color: black;
 }
 
-
 .logout-button {
   width: 100%;
   margin-top: 20px;
@@ -65,5 +62,59 @@
   text-align: center;
   padding: 20px;
   margin-left: 80px;
-  margin-top: 20px; /* Añadido margen superior para evitar que el navbar tape el contenido */
+  margin-top: 20px;
 }
+
+@media screen and (max-width: 772px) {
+  .navbar {
+    width: 120px;
+  }
+
+  .titulo {
+    font-size: 20px;
+    padding-bottom: 50px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    padding: 6px 0;
+  }
+
+  .logout-button {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .camisas-container,
+  .pantalones-container {
+    margin-left: 140px; /* igual al nuevo ancho del navbar */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .navbar {
+    width: 100px;
+  }
+
+  .titulo {
+    font-size: 18px;
+    padding-bottom: 40px;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    padding: 4px 0;
+  }
+
+  .logout-button {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .camisas-container,
+  .pantalones-container {
+    margin-left: 120px; /* igual al nuevo ancho del navbar */
+  }
+}
+
+

@@ -1,15 +1,17 @@
-.uniformes-container h1{  
-  padding-top: 60px;
+.uniformes-container h1 {  
+  margin-top:120px;
+  text-align: center;
 }
 
 .uniformes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  padding: 20px 0;
+  padding: 20px 0;  
   width: calc(100% - 200px);
-  margin-left: 150px; 
+  padding-left: 250px;
 }
+
 
 .uniforme-card {
   background-color: #f4f4f4;
@@ -159,17 +161,25 @@
   cursor: pointer;
   font-weight: bold;
 }
-
 @media (max-width: 768px) {
   .uniformes-grid {
     grid-template-columns: repeat(2, 1fr);
-    width: calc(100% - 200px);
+    width: 100%;
+    padding-left:137px;
+  }
+
+  .uniformes-container h1 {
+    padding-top: 30px; /* Opcional si deseas ajustar también el título */
   }
 }
 
 @media (max-width: 480px) {
   .uniformes-grid {
     grid-template-columns: repeat(1, 1fr);
-    width: calc(100% - 200px);
+    width: 100%;
+    padding-left:130px;
+  }
+  .uniformes-container h1 {
+    padding-top: 20px; /* Más compacto aún si es necesario */
   }
 }

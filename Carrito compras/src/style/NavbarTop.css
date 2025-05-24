@@ -107,6 +107,14 @@
   margin-top: 20px;
 }
 
+.carrito-contenedor {
+  max-height: calc(100vh - 100px); /* Ajusta según el espacio que quieras dejar libre */
+  overflow-y: auto;
+  padding: 20px;
+}
+
+
+
 /* Título del carrito */
 .titulo-carrito {
   background: white;
@@ -301,4 +309,60 @@
 
 .guardar-btn:hover {
   background-color: #cc2400;
+}
+@media screen and (max-width: 772px) {
+  .navbar-top {
+    width: calc(90% - 90px); /* respeta el nuevo ancho del navbar lateral */   
+    height: 130px;
+    left: 118px;
+    flex-direction: column;
+    align-items: flex-start;     
+  }
+
+  .nav-links-top,
+  .nav-links-top-admin {
+    flex-direction:column;
+    align-items: space-ar;
+    gap: 10px;
+    width: 90%;    
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .nav-links-top li,
+  .nav-links-top-admin li {
+    width: 100%;
+  }
+
+  .nav-links-top a,
+  .nav-links-top-admin a {
+    font-size: 14px;
+    padding: 8px 12px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-links-top-admin h1 {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .navbar-top {
+    width: calc(100% - 100px);
+    left: 100px;
+    padding: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .nav-links-top a,
+  .nav-links-top-admin a {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .nav-links-top-admin h1 {
+    font-size: 16px;
+  }
 }

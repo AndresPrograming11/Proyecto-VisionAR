@@ -7,8 +7,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 20px 0;
-  width: calc(100% - 200px);
-  margin-left: 150px; 
+  width: calc(100% - 200px); 
+  padding-left: 150px; 
 }
 
 .pantalon-card {
@@ -160,16 +160,27 @@
   font-weight: bold;
 }
 
+
+
 @media (max-width: 768px) {
   .pantalones-grid {
     grid-template-columns: repeat(2, 1fr);
-    width: calc(100% - 200px);
+    width: 100%;
+    padding-left:0;
+  }
+
+  .pantalones-container h1 {
+    padding-top: 30px;
   }
 }
 
 @media (max-width: 480px) {
   .pantalones-grid {
     grid-template-columns: repeat(1, 1fr);
-    width: calc(100% - 200px);
+    width: 100%;
+    padding-left:0;
+  }
+  .pantalones-container h1 {
+    padding-top: 20px; /* Más compacto aún si es necesario */
   }
 }
