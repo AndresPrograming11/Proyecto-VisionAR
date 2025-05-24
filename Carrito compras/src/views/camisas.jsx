@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../style/camisas.css";
-import ModalCamisa from "../views/ModalCamisa"; // ajusta la ruta si es necesario
-import { obtenerArticulos } from "../services/articulos"; // ajusta la ruta si es necesario
+import ModalProducto from "../views/ModalProducto"; 
+import { obtenerArticulos } from "../services/articulos"; 
 
-function Camisas({ setCarritoItems }) { // Recibimos setCarritoItems como prop
+function Camisas({ setCarritoItems }) {
   const [camisasData, setCamisasData] = useState([]);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
@@ -51,7 +51,7 @@ function Camisas({ setCarritoItems }) { // Recibimos setCarritoItems como prop
 
       {/* Modal */}
       {modalAbierto && productoSeleccionado && (
-        <ModalCamisa
+        <ModalProducto
           producto={productoSeleccionado}
           onClose={cerrarModal}
           setCarritoItems={setCarritoItems} // Pasamos la función al Modal

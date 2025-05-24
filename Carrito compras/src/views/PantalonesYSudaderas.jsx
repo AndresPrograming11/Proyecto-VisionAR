@@ -2,10 +2,10 @@ import "../style/PantalonesYSudaderas.css";
 
 import React, { useState, useEffect } from "react";
 import "../style/PantalonesYSudaderas.css";
-import ModalPantalon from "../views/ModalPantalon"; // ajusta la ruta si es necesario
-import { obtenerArticulos } from "../services/articulos"; // ajusta la ruta si es necesario
+import ModalProducto from "../views/ModalProducto"; 
+import { obtenerArticulos } from "../services/articulos"; 
 
-function Pantalones({ setCarritoItems }) { // Recibimos setCarritoItems como prop
+function PantalonesYSudaderas({ setCarritoItems }) { 
   const [pantalonesData, setPantalonesData] = useState([]);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
@@ -16,7 +16,7 @@ function Pantalones({ setCarritoItems }) { // Recibimos setCarritoItems como pro
         const data = await obtenerArticulos();
         if (data && Array.isArray(data)) {
           // Filtrar solo los pantalones
-          const pantalones = data.filter(item => item.categoria === "pantalones");
+          const pantalones = data.filter(item => item.categoria === "pantalon");
           setPantalonesData(pantalones);
         } else {
           console.error("Datos inválidos:", data);
@@ -53,14 +53,14 @@ function Pantalones({ setCarritoItems }) { // Recibimos setCarritoItems como pro
 
       {/* Modal */}
       {modalAbierto && productoSeleccionado && (
-        <ModalPantalon
+        <ModalProducto
           producto={productoSeleccionado}
           onClose={cerrarModal}
-          setCarritoItems={setCarritoItems} // Pasamos la función al Modal
+          setCarritoItems={setCarritoItems} 
         />
       )}
     </div>
   );
 }
 
-export default Pantalones;
+export default PantalonesYSudaderas;

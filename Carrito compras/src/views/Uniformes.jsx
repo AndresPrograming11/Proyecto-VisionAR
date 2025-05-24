@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../style/uniformes.css";
-import ModalUniforme from "../views/ModalUniforme"; // ajusta la ruta si es necesario
-import { obtenerArticulos } from "../services/articulos"; // ajusta la ruta si es necesario
+import ModalProducto from "../views/ModalProducto"; 
+import { obtenerArticulos } from "../services/articulos"; 
 
-function Uniformes({ setCarritoItems }) { // Recibimos setCarritoItems como prop
+function Uniformes({ setCarritoItems }) { 
   const [uniformesData, setUniformesData] = useState([]);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
@@ -14,7 +14,7 @@ function Uniformes({ setCarritoItems }) { // Recibimos setCarritoItems como prop
         const data = await obtenerArticulos();
         if (data && Array.isArray(data)) {
           // Filtrar solo los uniformes
-          const uniformes = data.filter(item => item.categoria === "uniformes");
+          const uniformes = data.filter(item => item.categoria === "uniforme");
           setUniformesData(uniformes);
         } else {
           console.error("Datos inválidos:", data);
@@ -51,7 +51,7 @@ function Uniformes({ setCarritoItems }) { // Recibimos setCarritoItems como prop
 
       {/* Modal */}
       {modalAbierto && productoSeleccionado && (
-        <ModalUniforme
+        <ModalProducto
           producto={productoSeleccionado}
           onClose={cerrarModal}
           setCarritoItems={setCarritoItems} // Pasamos la función al Modal
