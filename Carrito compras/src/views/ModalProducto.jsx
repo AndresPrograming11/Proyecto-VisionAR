@@ -1,10 +1,11 @@
+// ModalProducto.js
 import React, { useState, useEffect } from "react";
 import "../style/ModalProducto.css";
 
 const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
   const [cantidad, setCantidad] = useState(1);
   const [tallaSeleccionada, setTallaSeleccionada] = useState("");
-  const [precioTotal, setPrecioTotal] = useState(producto ? parseFloat(producto.precio) : 0);
+  const [precioTotal, setPrecioTotal] = useState(producto ? parseInt(producto.precio) : 0);
 
   useEffect(() => {
     if (producto && producto.precio) {
@@ -32,14 +33,15 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
       return;
     }
     const nuevoItem = {
-      id: Date.now(),
+      id: producto.id, // Asegúrate de que esto sea correcto
       ...producto,
       cantidad: cantidad,
       talla: tallaSeleccionada,
       precioTotal: precioTotal,
     };
+    console.log("Agregando al carrito:", nuevoItem); // Verifica el nuevo artículo
     setCarritoItems(prevItems => [...prevItems, nuevoItem]);
-    onClose();
+    onClose(); // Cierra el modal después de agregar
   };
 
   return (
@@ -60,7 +62,7 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
         <div className="control-detalle">
           <div className="control-seccion">
             <p>Precio</p>
-            <span>${parseFloat(producto.precio).toFixed(2)}</span>
+            <span>${parseInt(producto.precio)}</span>
           </div>
 
           <div className="control-seccion">
@@ -89,7 +91,7 @@ const ModalProducto = ({ producto, onClose, setCarritoItems }) => {
 
           <div className="control-seccion">
             <p>Precio Total</p>
-            <span>${precioTotal.toFixed(2)}</span>
+            <span>${precioTotal}</span>
           </div>
         </div>
 
