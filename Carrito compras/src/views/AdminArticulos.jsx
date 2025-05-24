@@ -1,36 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../style/AdminArticulos.css";
+import { obtenerArticulos } from "../services/articulos";
+
+// Función para validar si es una imagen
+const esImagen = (url) => {
+  const formatosImagen = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+  const extension = url.split('.').pop().toLowerCase();
+  return formatosImagen.includes(extension);
+};
+
+// Función para validar si es un enlace
+const esEnlace = (url) => {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 function AdminArticulos() {
-  const [articulos, setArticulos] = useState([
-    {
-      id: 1,
-      nombre: "Camisa Polo",
-      imagen: "https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp",
-      descripcion: "Camisa polo de algodón",
-      precio: "$25.000",
-      modelo3D: "modelo-camisa.glb",
-      categoria: "Camisas"
-    },
-    {
-      id: 2,
-      nombre: "Sudadera Negra",
-      imagen: "https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp",
-      descripcion: "Sudadera cómoda para clima frío",
-      precio: "$40.000",
-      modelo3D: "modelo-sudadera.glb",
-      categoria: "Pantalones y Sudaderas"
-    }
-  ]);
+  const [articulos, setArticulos] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await obtenerArticulos();
+        if (data && Array.isArray(data)) {
+          setArticulos(data);
+        } else {
+          console.error("Datos inválidos:", data);
+        }
+      } catch (error) {
+        console.error("Error al obtener artículos:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const eliminarArticulo = (id) => {
-    if (window.confirm("¿Eliminar este artículo?")) {
-      setArticulos(articulos.filter(a => a.id !== id));
-    }
+    alert("Implementa eliminación si deseas.");
   };
 
   const editarArticulo = (id) => {
-    alert(`Aquí puedes abrir modal o redirigir para editar el artículo con ID ${id}`);
+    alert("Implementa edición si deseas.");
   };
 
   return (
@@ -40,10 +53,10 @@ function AdminArticulos() {
         <thead>
           <tr>
             <th>Nombre</th>
-            <th>Imagen</th>
+            <th>Imagen/Enlace</th>
             <th>Descripción</th>
             <th>Precio</th>
-            <th>Modelo 3D</th>
+            <th>Modelos 3D</th>
             <th>Categoría</th>
             <th>Acciones</th>
           </tr>
@@ -52,10 +65,29 @@ function AdminArticulos() {
           {articulos.map((art) => (
             <tr key={art.id}>
               <td>{art.nombre}</td>
-              <td><img src={art.imagen} alt={art.nombre} className="img-preview" /></td>
+              <td>
+                {esImagen(art.imagen) ? (
+                  <img 
+                    src={esEnlace(art.imagen) ? art.imagen : `http://localhost/carrito-backend/${art.imagen}`} 
+                    alt={art.nombre} 
+                    className="img-preview"
+                    width="150" 
+                    height="150"
+                    onError={(e) => e.target.src = "/ruta-a-imagen-alternativa.jpg"}
+                  />
+                ) : esEnlace(art.imagen) ? (
+                  <a href={art.imagen} target="_blank" rel="noopener noreferrer">{art.imagen}</a>
+                ) : (
+                  <span>Formato no soportado</span>
+                )}
+              </td>
               <td>{art.descripcion}</td>
-              <td>{art.precio}</td>
-              <td>{art.modelo3D}</td>
+              <td>${parseFloat(art.precio).toLocaleString()}</td>
+              <td>
+                {art.modelo_3D_GLB && <a href={art.modelo_3D_GLB} target="_blank">GLB</a>}
+                {" / "}
+                {art.modelo_3D_USDZ && <a href={art.modelo_3D_USDZ} target="_blank">USDZ</a>}
+              </td>
               <td>{art.categoria}</td>
               <td>
                 <button onClick={() => editarArticulo(art.id)} className="btn-editar">Editar</button>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "../style/ModalCamisa.css"; // Asegúrate de que la ruta al CSS sea correcta
+import "../style/ModalPantalones.css"; // Asegúrate de que la ruta al CSS sea correcta
 
-const ModalCamisa = ({ producto, onClose, setCarritoItems }) => {
+const ModalPantalones = ({ producto, onClose, setCarritoItems }) => {
   const [cantidad, setCantidad] = useState(1);
   const [tallaSeleccionada, setTallaSeleccionada] = useState("");
   const [precioTotal, setPrecioTotal] = useState(producto ? parseFloat(producto.precio) : 0);
@@ -103,4 +103,4 @@ const ModalCamisa = ({ producto, onClose, setCarritoItems }) => {
   );
 };
 
-export default ModalCamisa;
+export default ModalPantalones;

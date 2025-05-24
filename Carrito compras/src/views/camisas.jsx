@@ -1,11 +1,30 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../style/camisas.css";
 import ModalCamisa from "../views/ModalCamisa"; // ajusta la ruta si es necesario
+import { obtenerArticulos } from "../services/articulos"; // ajusta la ruta si es necesario
 
-function Camisas() {
-  // Ejemplo de estado y uso
+function Camisas({ setCarritoItems }) { // Recibimos setCarritoItems como prop
+  const [camisasData, setCamisasData] = useState([]);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await obtenerArticulos();
+        if (data && Array.isArray(data)) {
+          // Filtrar solo las camisas
+          const camisas = data.filter(item => item.categoria === "Camisas");
+          setCamisasData(camisas);
+        } else {
+          console.error("Datos inválidos:", data);
+        }
+      } catch (error) {
+        console.error("Error al obtener camisas:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const abrirModal = (producto) => {
     setProductoSeleccionado(producto);
@@ -21,32 +40,22 @@ function Camisas() {
     <div className="camisas-container">
       <h1>CAMISAS</h1>
       <div className="camisas-grid">
-        <div className="camisa-card" onClick={() => abrirModal({ nombre: "Camisa Azul", precio: 4000, imagen: "https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" })}>
-          <img src="https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" alt="Camisa Azul" className="camisa-img" />
-          <h3>Camisa Azul</h3>
-          <p>$4000</p>
-        </div>
-        <div className="camisa-card" onClick={() => abrirModal({ nombre: "Camisa Roja", precio: 1200, imagen: "https://http2.mlstatic.com/D_NQ_NP_674679-MCO75132097525_032024-O.webp" })}>
-          <img src="https://http2.mlstatic.com/D_NQ_NP_674679-MCO75132097525_032024-O.webp" alt="Camisa Roja" className="camisa-img" />
-          <h3>Camisa Roja</h3>
-          <p>$1200</p>
-        </div>
-        <div className="camisa-card" onClick={() => abrirModal({ nombre: "Camisa Verde", precio: 700, imagen: "https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" })}>
-          <img src="https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" alt="Camisa Verde" className="camisa-img" />
-          <h3>Camisa Verde</h3>
-          <p>$700</p>
-        </div>
-        <div className="camisa-card" onClick={() => abrirModal({ nombre: "Camisa Negra", precio: 800, imagen: "https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" })}>
-          <img src="https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" alt="Camisa Negra" className="camisa-img" />
-          <h3>Camisa Negra</h3>
-          <p>$800</p>
-        </div>
-        {/* Repite la estructura para las demás camisas */}
+        {camisasData.map(camisa => (
+          <div className="camisa-card" key={camisa.id} onClick={() => abrirModal(camisa)}>
+            <img src={camisa.imagen} alt={camisa.nombre} className="camisa-img" />
+            <h3>{camisa.nombre}</h3>
+            <p>${parseFloat(camisa.precio).toFixed(2)}</p>
+          </div>
+        ))}
       </div>
 
       {/* Modal */}
-      {modalAbierto && (
-        <ModalCamisa producto={productoSeleccionado} onClose={cerrarModal} />
+      {modalAbierto && productoSeleccionado && (
+        <ModalCamisa
+          producto={productoSeleccionado}
+          onClose={cerrarModal}
+          setCarritoItems={setCarritoItems} // Pasamos la función al Modal
+        />
       )}
     </div>
   );

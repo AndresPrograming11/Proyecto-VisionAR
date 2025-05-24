@@ -1,34 +1,66 @@
 import "../style/PantalonesYSudaderas.css";
 
-function pantalonesYSudaderas() {
+import React, { useState, useEffect } from "react";
+import "../style/PantalonesYSudaderas.css";
+import ModalPantalon from "../views/ModalPantalon"; // ajusta la ruta si es necesario
+import { obtenerArticulos } from "../services/articulos"; // ajusta la ruta si es necesario
+
+function Pantalones({ setCarritoItems }) { // Recibimos setCarritoItems como prop
+  const [pantalonesData, setPantalonesData] = useState([]);
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await obtenerArticulos();
+        if (data && Array.isArray(data)) {
+          // Filtrar solo los pantalones
+          const pantalones = data.filter(item => item.categoria === "pantalones");
+          setPantalonesData(pantalones);
+        } else {
+          console.error("Datos inválidos:", data);
+        }
+      } catch (error) {
+        console.error("Error al obtener pantalones:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const abrirModal = (producto) => {
+    setProductoSeleccionado(producto);
+    setModalAbierto(true);
+  };
+
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    setProductoSeleccionado(null);
+  };
+
   return (
     <div className="pantalones-container">
       <h1>PANTALONES</h1>
-      <div className="pantalones-grid"> {/* Aquí debería estar "pantalones-grid" con "p" minúscula */}
-        <div className="pantalon-card">
-          <img src="https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" alt="Camisa Azul" className="pantalones-img" />
-          <h3>Camisa Azul</h3>
-          <p>$4000</p>
-        </div>
-        <div className="pantalon-card">
-          <img src="https://http2.mlstatic.com/D_NQ_NP_674679-MCO75132097525_032024-O.webp" alt="Camisa Roja" className="pantalones-img" />
-          <h3>Camisa Roja</h3>
-          <p>$1200</p>
-        </div>
-        <div className="pantalon-card">
-          <img src="https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" alt="Camisa Verde" className="pantalones-img" />
-          <h3>Camisa Verde</h3>
-          <p>$700</p>
-        </div>
-        <div className="pantalon-card">
-          <img src="https://http2.mlstatic.com/D_NQ_NP_696638-MCO75131653897_032024-O.webp" alt="Camisa Negra" className="pantalones-img" />
-          <h3>Camisa Negra</h3>
-          <p>$800</p>
-        </div>
-        {/* Repite la estructura para las demás camisas */}
+      <div className="pantalones-grid">
+        {pantalonesData.map(pantalon => (
+          <div className="pantalon-card" key={pantalon.id} onClick={() => abrirModal(pantalon)}>
+            <img src={pantalon.imagen} alt={pantalon.nombre} className="pantalon-img" />
+            <h3>{pantalon.nombre}</h3>
+            <p>${parseFloat(pantalon.precio).toFixed(2)}</p>
+          </div>
+        ))}
       </div>
+
+      {/* Modal */}
+      {modalAbierto && productoSeleccionado && (
+        <ModalPantalon
+          producto={productoSeleccionado}
+          onClose={cerrarModal}
+          setCarritoItems={setCarritoItems} // Pasamos la función al Modal
+        />
+      )}
     </div>
   );
 }
 
-export default pantalonesYSudaderas;
+export default Pantalones;

@@ -31,10 +31,11 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("sdsssss", $nombre, $precio, $descripcion, $categoria, $imagen, $modeloGLB, $modeloUSDZ);
 
 if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Artículo creado."]);
+    echo json_encode(["success" => true, "message" => "Artículo creado exitosamente."]);
 } else {
-    echo json_encode(["success" => false, "message" => "Error al insertar: " . $conn->error]);
+    echo json_encode(["success" => false, "message" => "Error al insertar el artículo."]);
 }
+
 
 $stmt->close();
 $conn->close();

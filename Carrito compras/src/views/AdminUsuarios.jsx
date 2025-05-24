@@ -45,8 +45,8 @@ function AdminUsuarios() {
               <td>{usuario.nombre}</td>
               <td>{usuario.correo}</td>
               <td>{usuario.username}</td>
-              <td>**********</td>
               <td>{usuario.role}</td>
+              <td>**********</td>
               <td>
                 <button onClick={() => editarUsuario(usuario.id)} className="btn-editar">Editar</button>
                 <button onClick={() => eliminarUsuario(usuario.id)} className="btn-eliminar">Eliminar</button>

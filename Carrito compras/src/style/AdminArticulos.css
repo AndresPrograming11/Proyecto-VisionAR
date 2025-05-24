@@ -102,3 +102,10 @@
     }
   }
   
+  .img-preview {
+    width: 150px;
+    height: 150px;
+    object-fit: cover; /* Mantiene el aspecto visual sin distorsionar la imagen */
+    border-radius: 8px; /* Opcional: bordes redondeados */
+  }
+  

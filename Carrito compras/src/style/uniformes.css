@@ -1,0 +1,44 @@
+.uniformes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.uniforme-card {
+  background-color: #f4f4f4;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 200px;
+}
+
+.uniforme-card img {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.uniforme-card h3 {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.uniforme-card p {
+  font-size: 14px;
+  color: #555;
+}
+
+.uniforme-card button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.uniforme-card button:hover {
+  background-color: #0056b3;
+}
