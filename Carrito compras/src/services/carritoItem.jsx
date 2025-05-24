@@ -45,6 +45,45 @@ export async function obtenerCarrito(userId) {
 }
 
 
+const API_URL = "http://localhost/carrito-backend/"; // Ajusta esta URL
+
+export const actualizarCantidadCarrito = async (id, cantidad) => {
+  const response = await fetch(`${API_URL}/actualizar_carrito.php`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id, cantidad }),
+  });
+
+  return response.json();
+};
+
+export const eliminarDelCarritoBD = async (id) => {
+  const response = await fetch(`${API_URL}/eliminar_item_carrito.php`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  });
+
+  return response.json();
+};
+
+export const cargarCarrito = async () => {
+  if (userId) {
+    try {
+      const carrito = await obtenerCarrito(userId);
+      setCarritoItems(carrito);
+    } catch (error) {
+      console.error("Error al cargar el carrito:", error);
+    }
+  }
+};
+
+
+
 
   
 // src/services/carritoItem.jsx

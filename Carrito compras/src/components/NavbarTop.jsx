@@ -4,13 +4,11 @@ import "../style/NavbarTop.css";
 import { registrarUsuario } from "../services/registro";
 import { crearArticulo } from "../services/articulos";
 import {
-  obtenerCarrito,
-  aumentarCantidad as aumentarCantidadEnCarrito,
-  disminuirCantidad as disminuirCantidadEnCarrito,
-  eliminarDelCarrito,
+  obtenerCarrito,  
 } from "../services/carritoItem";
 import { pagarConStripe } from "../services/pagoStripe";
 import { crearFactura } from '../services/factura';
+import { actualizarCantidadCarrito, eliminarDelCarritoBD } from '../services/carritoItem';
 
 function NavbarTop() {
   const location = useLocation();
@@ -73,7 +71,13 @@ function NavbarTop() {
   }, [carritoItems, calcularTotal]);
 
   const toggleMenuRedespegable = () => setMenuRedespegable(!MenuRedespegable);
-  const AbrirTienda = () => setTiendaSeleccionada(true);
+
+  const AbrirTienda = async () => {
+    const carrito = await obtenerCarrito(userId);
+    setCarritoItems(carrito);
+    setTiendaSeleccionada(true);
+  };
+  
   const CerrarTienda = () => setTiendaSeleccionada(false);
 
   const getTitle = () => {
@@ -139,29 +143,31 @@ function NavbarTop() {
     }
   };
 
-  const aumentarCantidadCarrito = (itemId) => {
-    const updatedCarrito = carritoItems.map(item =>
-      item.id === itemId ? { ...item, cantidad: (item.cantidad || 0) + 1 } : item
+const aumentarCantidadCarrito = async (itemId) => {
+  const updatedCarrito = carritoItems.map(item =>
+    item.id === itemId ? { ...item, cantidad: (item.cantidad || 0) + 1 } : item
+  );
+  setCarritoItems(updatedCarrito);
+  await actualizarCantidadCarrito(itemId, (carritoItems.find(i => i.id === itemId)?.cantidad || 0) + 1);
+};
+
+const disminuirCantidadCarrito = async (itemId) => {
+  const item = carritoItems.find(i => i.id === itemId);
+  if (item && item.cantidad > 1) {
+    const updatedCarrito = carritoItems.map(i =>
+      i.id === itemId ? { ...i, cantidad: i.cantidad - 1 } : i
     );
     setCarritoItems(updatedCarrito);
-    aumentarCantidadEnCarrito(updatedCarrito, itemId);
-  };
+    await actualizarCantidadCarrito(itemId, item.cantidad - 1);
+  }
+};
 
-  const disminuirCantidadCarrito = (itemId) => {
-    const updatedCarrito = carritoItems.map(item =>
-      item.id === itemId && (item.cantidad || 0) > 1
-        ? { ...item, cantidad: item.cantidad - 1 }
-        : item
-    );
-    setCarritoItems(updatedCarrito);
-    disminuirCantidadEnCarrito(updatedCarrito, itemId);
-  };
-
-  const eliminarItem = (itemId) => {
-    const updatedCarrito = carritoItems.filter(item => item.id !== itemId);
-    setCarritoItems(updatedCarrito);
-    eliminarDelCarrito(updatedCarrito, itemId);
-  };
+const eliminarItem = async (itemId) => {
+  const updatedCarrito = carritoItems.filter(item => item.id !== itemId);
+  setCarritoItems(updatedCarrito);
+  await eliminarDelCarritoBD(itemId);
+};
+  
 
   const realizarPago = async () => {
     if (!carritoItems?.length) {
