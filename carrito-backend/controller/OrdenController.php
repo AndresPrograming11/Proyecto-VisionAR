@@ -20,9 +20,17 @@ class OrdenController {
 
     public function obtenerOrdenes() {
         $usuarioId = $_GET['usuario_id'] ?? null;
+
+        if ($usuarioId === null) {
+            echo json_encode(["success" => false, "message" => "Usuario no autenticado"]);
+            exit;
+        }
+
+        $ordenes = $this->model->obtenerOrdenesConDetalles($usuarioId);
+
         echo json_encode([
             'success' => true,
-            'data' => $this->model->obtenerOrdenesConDetalles($usuarioId)
+            'data' => $ordenes
         ]);
     }
 }

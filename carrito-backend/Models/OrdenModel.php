@@ -8,59 +8,82 @@ class OrdenModel {
         $this->conn = $conn;
     }
 
-    public function obtenerOrdenesConDetalles($usuarioId = null) {
-        $sql = "SELECT o.id, o.usuario_id, o.fecha, o.total, o.items, 
+    public function obtenerOrdenesConDetalles($usuarioId) {
+        $sql = "SELECT f.id, f.usuario_id, f.fecha, f.total, f.items, 
                        u.nombre AS nombre_usuario, u.correo
-                FROM facturas o
-                JOIN usuarios u ON o.usuario_id = u.id";
-
-        if ($usuarioId !== null) {
-            $sql .= " WHERE o.usuario_id = ?";
-        }
+                FROM facturas f
+                JOIN usuarios u ON f.usuario_id = u.id
+                WHERE f.usuario_id = ?";
 
         $stmt = $this->conn->prepare($sql);
-        if ($usuarioId !== null) {
-            $stmt->bind_param("i", $usuarioId);
+        if (!$stmt) {
+            die('Error en la preparación de la consulta: ' . $this->conn->error);
         }
-        $stmt->execute();
+
+        $stmt->bind_param("i", $usuarioId);
+        if (!$stmt->execute()) {
+            die('Error en la ejecución de la consulta: ' . $stmt->error);
+        }
+
         $result = $stmt->get_result();
         $ordenes = [];
+        $idsProductos = [];
+        $facturasTemporal = [];
 
-        // Prepara la consulta para obtener producto solo una vez
-        $sqlProd = "SELECT nombre, precio FROM articulos WHERE id = ? LIMIT 1";
-        $stmtProd = $this->conn->prepare($sqlProd);
+        while ($factura = $result->fetch_assoc()) {
+            $items = json_decode($factura['items'], true) ?? [];
+            $factura['items'] = $items;
 
-        while ($row = $result->fetch_assoc()) {
-            $row['items'] = json_decode($row['items'], true) ?? [];
-
-            foreach ($row['items'] as &$item) {
-                if (!isset($item['producto_id'])) {
-                    $item['nombre_producto'] = "ID de producto faltante";
-                    $item['precio_unitario'] = 0;
-                    continue;
-                }
-
-                $productoId = intval($item['producto_id']);
-                $stmtProd->bind_param("i", $productoId);
-                $stmtProd->execute();
-                $resProd = $stmtProd->get_result();
-
-                if ($resProd && $resProd->num_rows > 0) {
-                    $prodData = $resProd->fetch_assoc();
-                    $nombreBase = $prodData['nombre'];
-                    $talla = isset($item['talla']) ? " - Talla: " . $item['talla'] : "";
-                    $item['nombre_producto'] = $nombreBase . $talla;
-                    $item['precio_unitario'] = floatval($prodData['precio']);
-                } else {
-                    $item['nombre_producto'] = "Producto no encontrado";
-                    $item['precio_unitario'] = 0;
+            foreach ($items as $item) {
+                if (isset($item['producto_id'])) {
+                    $idsProductos[] = intval($item['producto_id']);
                 }
             }
 
-            $ordenes[] = $row;
+            $facturasTemporal[] = $factura;
         }
 
-        $stmtProd->close();
+        $idsProductos = array_unique($idsProductos);
+
+        $mapaProductos = [];
+        if (count($idsProductos) > 0) {
+            $placeholders = implode(',', array_fill(0, count($idsProductos), '?'));
+            $tipos = str_repeat('i', count($idsProductos));
+
+            $sqlProd = "SELECT id, nombre, precio FROM articulos WHERE id IN ($placeholders)";
+            $stmtProd = $this->conn->prepare($sqlProd);
+            if (!$stmtProd) {
+                die('Error en la preparación de productos: ' . $this->conn->error);
+            }
+
+            $stmtProd->bind_param($tipos, ...$idsProductos);
+            $stmtProd->execute();
+            $resProd = $stmtProd->get_result();
+
+            while ($prod = $resProd->fetch_assoc()) {
+                $mapaProductos[$prod['id']] = $prod;
+            }
+            $stmtProd->close();
+        }
+
+        foreach ($facturasTemporal as &$factura) {
+            foreach ($factura['items'] as &$item) {
+                $idProd = intval($item['producto_id'] ?? 0);
+                if ($idProd && isset($mapaProductos[$idProd])) {
+                    $item['nombre_producto'] = $mapaProductos[$idProd]['nombre'];
+                    $item['precio_unitario'] = floatval($mapaProductos[$idProd]['precio']);                 
+                    
+                } else {
+                    $item['nombre_producto'] = "Producto no encontrado";
+                    $item['precio_producto'] = 0;
+                }
+            }
+            unset($item);
+            $ordenes[] = $factura;
+        }
+        unset($factura);
+        $stmt->close();
+
         return $ordenes;
     }
 }

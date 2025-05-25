@@ -8,7 +8,7 @@
   gap: 20px;
   padding: 20px 0;
   width: calc(100% - 200px);
-  padding-left: 150px; /* ✅ Se aplica en escritorio */
+  padding-left: 150px; 
 }
 
 .camisa-card {
@@ -36,7 +36,7 @@
   color: #555;
 }
 
-/* Modal para detalles de camisa */
+
 .modal-detalle {
   position: fixed;
   top: 0;
@@ -50,7 +50,6 @@
   align-items: center;
 }
 
-/* Contenedor de contenido */
 .modal-contenido {
   background: white;
   width: 90%;
@@ -61,7 +60,7 @@
   text-align: center;
 }
 
-/* Botón cerrar */
+
 .modal-cerrar {
   position: absolute;
   top: 15px;
@@ -72,7 +71,6 @@
   cursor: pointer;
 }
 
-/* Imagen y título */
 .modal-contenido h2 {
   font-size: 26px;
   color: #3d2f9a;
@@ -86,7 +84,7 @@
   margin-bottom: 20px;
 }
 
-/* Sección de descripción y tallas */
+
 .descripcion-detalle {
   background-color: red;
   color: white;
@@ -107,7 +105,7 @@
   margin-top: 5px;
 }
 
-/* Controles de cantidad y tallas */
+
 .control-detalle {
   display: flex;
   justify-content: space-between;
@@ -141,7 +139,7 @@
   cursor: pointer;
 }
 
-/* Botones de acciones */
+
 .botones-detalle {
   display: flex;
   justify-content: center;
@@ -160,17 +158,17 @@
   font-weight: bold;
 }
 
-/* 📱 Media query para tablets */
+
 @media (max-width: 768px) {
   
   .camisas-grid {
     grid-template-columns: repeat(2, 1fr);
     width: 100%;
-    padding-left: 0; /* ❌ Quita el padding en tablet */
+    padding-left: 0; 
   }
 
   .camisas-container h1 {
-    padding-top: 30px; /* Opcional si deseas ajustar también el título */
+    padding-top: 30px; 
   }
 }
 
@@ -180,10 +178,10 @@
   .camisas-grid {
     grid-template-columns: repeat(1, 1fr);
     width: 100%;
-    padding-left: 0; /* ❌ Quita el padding en móvil */
+    padding-left: 0; 
   }
 
   .camisas-container h1 {
-    padding-top: 20px; /* Más compacto aún si es necesario */
+    padding-top: 20px;
   }
 }

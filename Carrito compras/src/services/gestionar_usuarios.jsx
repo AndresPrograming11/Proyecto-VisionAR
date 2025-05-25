@@ -58,7 +58,7 @@ export const cambiarContrasenaConToken = async (token, nuevaContrasena) => {
     });
 
     const text = await response.text(); // Lee la respuesta como texto
-    console.log("Respuesta del servidor:", text); // 👈 Para depuración
+    console.log("Respuesta del servidor:", text);
 
     let data;
     try {

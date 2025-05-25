@@ -1,4 +1,4 @@
-/* Estilos generales del navbar superior */
+
 .navbar-top {
   width: calc(100% - 200px);
   height: 50px;
@@ -13,21 +13,20 @@
   padding-top: 50px;
 }
 
-/* Estilos comunes para las listas de navegación superior */
+
 .nav-links-top,
 .nav-links-top-admin {
   list-style: none;
   display: flex;
   gap: 30px;
   margin: 0;
-  padding: 30px; /* Unifiqué el padding aquí */
+  padding: 30px; 
   background: white;
   width: 100%;
   justify-content: space-around;
   border-radius: 10px;
 }
 
-/* Estilos específicos para la navegación de usuario */
 .nav-links-top a {
   text-decoration: none;
   color: black;
@@ -43,10 +42,10 @@
   cursor: pointer;
 }
 
-/* Estilos específicos para la navegación de administrador */
+
 .nav-links-top-admin {
-  padding: 10px; /* Sobreescribo el padding general para admin */
-  justify-content: space-between; /* Alinea los elementos de la lista a los extremos */
+  padding: 10px; 
+  justify-content: space-between; 
   align-items: center;
 }
 
@@ -84,11 +83,10 @@
   color: white;
   padding: 15px;
   border-radius: 20px;
-  border: none; /* Añadí esto para consistencia */
-  cursor: pointer; /* Añadí esto para indicar interactividad */
+  border: none; 
+  cursor: pointer; 
 }
 
-/* Estilos del fondo negro del carrito */
 .fondo-negro {
   position: fixed;
   top: 39px;
@@ -99,7 +97,7 @@
   z-index: 10;
 }
 
-/* Contenedor principal del carrito */
+
 .carrito-contenedor {
   display: flex;
   flex-direction: column;
@@ -108,7 +106,7 @@
 }
 
 .carrito-contenedor {
-  max-height: calc(100vh - 100px); /* Ajusta según el espacio que quieras dejar libre */
+  max-height: calc(100vh - 100px); 
   overflow-y: auto;
   padding: 20px;
 }
@@ -132,7 +130,7 @@
   margin-left: 12%;
 }
 
-/* Item individual del carrito */
+
 .carrito-item {
   background: white;
   display: flex;
@@ -140,7 +138,7 @@
   justify-content: center;
   gap: 20px;
   width: 80%;
-  margin: 0 auto 15px auto; /* centrado horizontal + separación abajo */
+  margin: 0 auto 15px auto;
   padding: 15px;
   border-radius: 10px;
 }
@@ -152,7 +150,6 @@
   border-radius: 8px;
 }
 
-/* Contenedor de la información del producto en el carrito */
 .info-carrito {
   display: flex;
   align-items: center;
@@ -161,13 +158,12 @@
   flex: 1;
 }
 
-/* Título del producto en el carrito */
+
 .info-carrito h4 {
   margin: 0;
   font-size: 18px;
 }
 
-/* Botón de talla */
 .talla-btn {
   background: #ddd;
   border: none;
@@ -178,7 +174,7 @@
   cursor: default;
 }
 
-/* Contador de cantidad */
+
 .contador {
   display: flex;
   align-items: center;
@@ -194,7 +190,6 @@
   cursor: pointer;
 }
 
-/* Botón de eliminar */
 .borrar-btn {
   background: #8f0a0a;
   color: white;
@@ -204,17 +199,17 @@
   cursor: pointer;
 }
 
-/* Botón para cerrar el carrito */
+
 .cerrar-carrito {
   background: none;
   border-radius: 20px;
   font-size: 20px;
   color: rgb(5, 5, 5);
   cursor: pointer;
-  border: none; /* Añadí esto para consistencia */
+  border: none; 
 }
 
-/* Precio del carrito */
+
 .precio-carrito {
   font-size: 1.5em;
   font-weight: bold;
@@ -239,7 +234,7 @@
 }
 
 .modal-content {
-  background: #043294; /* púrpura oscuro */
+  background: #043294; 
   color: white;
   padding: 2rem;
   border-radius: 12px;
@@ -293,7 +288,7 @@
 
 .guardar-btn {
   margin-top: 1.5rem;
-  background-color: #ff2d00; /* rojo brillante */
+  background-color: #ff2d00; 
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -312,7 +307,7 @@
 }
 @media screen and (max-width: 772px) {
   .navbar-top {
-    width: calc(90% - 90px); /* respeta el nuevo ancho del navbar lateral */   
+    width: calc(90% - 90px);    
     height: 130px;
     left: 118px;
     flex-direction: column;

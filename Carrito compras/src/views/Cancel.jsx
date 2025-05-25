@@ -7,7 +7,7 @@ export default function Cancel() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/login"); // Ruta interna relativa
+      navigate("/login"); 
     }, 2000);
 
     return () => clearTimeout(timer);

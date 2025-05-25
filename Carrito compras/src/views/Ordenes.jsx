@@ -4,13 +4,18 @@ import { obtenerOrdenes } from "../services/ordenes";
 
 const Ordenes = () => {
   const [ordenes, setOrdenes] = useState([]);
-  const [usuarioId, setUsuarioId] = useState("");
 
   useEffect(() => {
-    if (!usuarioId || isNaN(usuarioId)) return;
+    const idUsuario = localStorage.getItem("userId");
+    if (!idUsuario) {
+      console.error("No se encontró el ID del usuario en localStorage");
+      return;
+    }
+
+    console.log("ID del usuario:", idUsuario);
 
     async function cargarOrdenes() {
-      const response = await obtenerOrdenes(usuarioId);
+      const response = await obtenerOrdenes(idUsuario);
       if (response?.success && Array.isArray(response.data)) {
         setOrdenes(response.data);
       } else {
@@ -19,7 +24,7 @@ const Ordenes = () => {
     }
 
     cargarOrdenes();
-  }, [usuarioId]);
+  }, []);
 
   const descargarFacturaPDF = (orden) => {
     const doc = new jsPDF();
@@ -60,16 +65,7 @@ const Ordenes = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Listado de Órdenes</h2>
-
-      <label>Ingrese el ID del usuario:</label>
-      <input
-        type="number"
-        value={usuarioId}
-        onChange={(e) => setUsuarioId(e.target.value)}
-        placeholder="Ejemplo: 19"
-        style={{ margin: "10px", padding: "5px" }}
-      />
+      <h2>Mis Órdenes</h2>
 
       <table border="1" cellPadding="5" cellSpacing="0" style={{ width: "100%", marginBottom: 20 }}>
         <thead>

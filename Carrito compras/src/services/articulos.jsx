@@ -2,7 +2,7 @@ export const crearArticulo = async (formData) => {
     try {
       const response = await fetch("http://localhost/carrito-backend/Models/crear_articulo.php", {
         method: "POST",
-        body: formData, // importante: enviar FormData, no JSON
+        body: formData,
       });
       return await response.json();
     } catch (error) {

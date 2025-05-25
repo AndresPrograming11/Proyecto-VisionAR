@@ -38,7 +38,7 @@
   color: #555;
 }
 
-/* Modal para detalles de uniforme */
+
 .modal-detalle {
   position: fixed;
   top: 0;
@@ -52,7 +52,7 @@
   align-items: center;
 }
 
-/* Contenedor de contenido */
+
 .modal-contenido {
   background: white;
   width: 90%;
@@ -63,7 +63,6 @@
   text-align: center;
 }
 
-/* Botón cerrar */
 .modal-cerrar {
   position: absolute;
   top: 15px;
@@ -74,7 +73,7 @@
   cursor: pointer;
 }
 
-/* Imagen y título */
+
 .modal-contenido h2 {
   font-size: 26px;
   color: #3d2f9a;
@@ -88,7 +87,7 @@
   margin-bottom: 20px;
 }
 
-/* Sección de descripción y tallas */
+
 .descripcion-detalle {
   background-color: red;
   color: white;
@@ -109,7 +108,7 @@
   margin-top: 5px;
 }
 
-/* Controles de cantidad y tallas */
+
 .control-detalle {
   display: flex;
   justify-content: space-between;
@@ -143,7 +142,6 @@
   cursor: pointer;
 }
 
-/* Botones de acciones */
 .botones-detalle {
   display: flex;
   justify-content: center;
@@ -169,7 +167,7 @@
   }
 
   .uniformes-container h1 {
-    padding-top: 30px; /* Opcional si deseas ajustar también el título */
+    padding-top: 30px; 
   }
 }
 
@@ -180,6 +178,6 @@
     padding-left:130px;
   }
   .uniformes-container h1 {
-    padding-top: 20px; /* Más compacto aún si es necesario */
+    padding-top: 20px; 
   }
 }

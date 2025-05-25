@@ -2,8 +2,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Ocupa toda la pantalla */
-    background-color: #f4f4f4; /* Fondo gris claro */
+    height: 100vh; 
+    background-color: #f4f4f4; 
   }
   
   .admin-panel {

@@ -87,7 +87,7 @@
 
   .camisas-container,
   .pantalones-container {
-    margin-left: 140px; /* igual al nuevo ancho del navbar */
+    margin-left: 140px;
   }
 }
 
@@ -113,7 +113,7 @@
 
   .camisas-container,
   .pantalones-container {
-    margin-left: 120px; /* igual al nuevo ancho del navbar */
+    margin-left: 120px;
   }
 }
 

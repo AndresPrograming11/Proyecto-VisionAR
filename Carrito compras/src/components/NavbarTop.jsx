@@ -172,18 +172,23 @@ const realizarPago = () => {
   if (!carritoItems?.length) {
     return alert("Tu carrito está vacío.");
   }
-
-  // Guardamos la info temporalmente para usarla después del pago
+  
   localStorage.setItem("facturaData", JSON.stringify({
     usuario_id: userId,
     fecha: new Date().toISOString().split('T')[0],
     total: totalCarrito,
-    items: carritoItems.map(({ id, cantidad, talla }) => ({
-      producto_id: id,
+    items: carritoItems.map(({ id, articulo_id, cantidad, talla, nombre, precio }) => ({
+      id, 
+      articulo_id,
+      producto_id: articulo_id, 
       cantidad,
       talla: talla || null,
+      nombre_producto: nombre,
+      precio_producto: precio,
     })),
   }));
+  
+  
 
   // Redirige al flujo de pago (Stripe u otra pasarela)
   pagarConStripe({ items: carritoItems, total: totalCarrito });
