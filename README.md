@@ -1,25 +1,116 @@
-Vision Art
+Prototipo de Aplicación Web con Realidad Aumentada para la Tienda USC
 
-Introducción:
+Este proyecto consiste en el desarrollo de un prototipo funcional de una aplicación web para la Tienda de la Universidad Santiago de Cali (USC), el cual incorpora tecnologías de Realidad Aumentada (RA) con el objetivo de enriquecer la experiencia de compra en línea de los usuarios.
 
-Podemos ver que actualmente las tecnologías digitales han cambiado como las personas interactúan con los productos antes de realizar la compra de estos. Esto se puede ver en el comercio electrónico, donde la realidad aumentada (RA) se ha estado integrando como una herramienta innovadora la cual permite visualizar productos en entornos reales a través de la cámara de los dispositivos, generando así una mejor experiencia de compra para el usuario. Hoy en día ya grandes marcas como Nike, Ikea y Zara han integrado esta tecnología en sus plataformas ofreciendo una experiencia interactiva a sus clientes. Por otro lado, se puede ver que en el sector universitario la tecnología de RA se ha integrado para temas de educación y mejorar el aprendizaje, pero no hay registros de su integración en tiendas universitarias, lo que genera una oportunidad para modernizar estos procesos de venta de estas tiendas y facilitar la accesibilidad a los productos exclusivos. 
+Tabla de Contenidos:
 
-Dado lo anterior, el presente proyecto tiene como propósito desarrollar una aplicación web que integrará realidad aumentada para la tienda santiaguina, la cual facilitará a los estudiantes visualizar un catálogo de las prendas exclusivas de la Universidad Santiago de Cali (USC). 
+Descripción
+Tecnologías Utilizadas
+Instalación
+Uso del Sistema
+Estructura del Proyecto
+Manual de usuario subido en moodle
+Contribuciones
+Autores y Créditos
+Licencia
+Contacto
 
-La importancia de este proyecto se soporta en dos aspectos claves. Primero, en la necesidad de facilitar la accesibilidad a los estudiantes principalmente aquellos que no pueden acudir físicamente a la tienda. Y segundo como una oportunidad de implementar esta tecnología emergente que está evolucionando la interacción con el comercio electrónico, permitiendo alinear a la tienda santiaguina con las tendencias actuales. 
+Descripción:
+
+La aplicación permite a los usuarios explorar los productos de la tienda universitaria mediante visualizaciones 3D y en Realidad Aumentada desde navegadores compatibles o dispositivos móviles. Esto no solo moderniza la experiencia de compra, sino que también facilita la toma de decisiones al ofrecer una vista más realista de los artículos.
+
+Funcionalidades destacadas:
+
+Catálogo interactivo de productos.
+Visualización 3D y RA (formatos GLB y USDZ).
+Carrito de compras básico.
+Panel de administración para la gestión de productos.
+Tecnologías Utilizadas
+Frontend: HTML5, CSS3, JavaScript, React
+Backend: PHP
+Base de Datos: MySQL
+RA: Model Viewer (compatible con GLB y USDZ)
+Otros: Vite
+
+Instalación
+Requisitos Previos
+Servidor local (XAMPP)
+PHP >= 7.4
+
+MySQL
+Node.js y npm (para compilar React)
+
+Pasos de Instalación
+
+Clona el repositorio:
+
+git clone https://github.com/tuusuario/nombre-del-repo.git
+Copia la carpeta del proyecto al directorio htdocs de XAMPP.
+Importa la base de datos desde /db/tienda_usc.sql usando phpMyAdmin.
+Configura el archivo de conexión a la base de datos en /backend/config/conexion.php.
+
+Instala las dependencias del frontend:
+cd frontend
+npm install
+npm run dev
+Accede al sistema desde http://localhost/carrito compras.
+
+Uso del Sistema
+Los usuarios pueden explorar el catálogo, seleccionar productos y visualizar modelos en RA mediante la opción "Ver en RA".
+
+Los administradores tienen acceso a un panel donde pueden agregar, editar o eliminar productos.
+
+Estructura del Proyecto
+
+/frontend          -> Código React (interfaz de usuario)
+/backend           -> Código PHP (lógica del servidor y conexión a la BD)
+/conexion               -> Scripts SQL para la base de datos
+/imagenes            -> Imágenes y modelos 3D (GLB, USDZ)
 
 
-Planteamiento del Problema :
+Contenido usuario manual usuario:
 
-La tienda santiaguina, la cual se encarga en ofrecer uniformes y ropa deportiva exclusivos de la Universidad Santiago de Cali, durante años ha sido un punto de referencia para la comunidad estudiantil; la cual cuenta con un único punto físico dentro del campus principal de la Universidad, la cual se presenta una afectación y un acceso limitado para los estudiantes de la sede de Palmira, ya que se les dificulta visitar el punto físico sea por falta de transporte o horarios limitados, esto provoca que no puedan adquirir sus prendas de forma oportuna y cómoda. 
-
-
-Objetivo general: 
-
-Desarrollar una aplicación web integrando realidad aumentada para la tienda santiaguina, mejorando la experiencia de compra sin la necesidad de visitar el establecimiento físico.
-
-Tecnologías:
-
-Lista las tecnologías o herramientas usadas React+vite para el frontend y php para el backend
+Acceso al sistema
+Navegación por el catálogo
+Visualización de productos en RA
+Gestión del carrito de compras
 
 
+Contenido tambien manual usuario:
+Ingreso al panel administrativo
+Gestión de productos (agregar, editar, eliminar)
+Recomendaciones sobre formatos y dimensiones de modelos 3D
+
+Contribuciones
+¡Las contribuciones son bienvenidas! Para colaborar:
+Github
+
+Crea una nueva rama:
+
+git checkout -b mi-nueva-funcionalidad
+Realiza los cambios y confirma:
+
+
+git commit -m "Agrega nueva funcionalidad"
+Haz push a tu fork:
+
+git push origin mi-nueva-funcionalidad
+Abre un Pull Request desde GitHub.
+
+Autores y Créditos
+
+Jair Sanclemente – Product Owner
+Carlos Andrés Torres – Scrum Master y Desarrollador
+Santiago Argote – Diseñador UI/UX
+Oscar David Juagibioy – Tester
+María José Vargas – Control de calidad
+Julian H. Pérez / Alexander Q. – Análisis y Planeación
+Tienda USC – Cliente evaluador
+Estudiantes USC – Usuarios de prueba
+
+Licencia
+Este proyecto está licenciado bajo la Licencia MIT (Licencia de codigo abierto)
+
+Contacto
+Para dudas, sugerencias o soporte técnico, puedes contactar a:
+Carlos A. Torres – carlos.torres13@usc.edu.co
